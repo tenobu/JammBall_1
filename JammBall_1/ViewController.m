@@ -29,9 +29,6 @@
 	//加速度センサー
 	CMMotionManager *motionManager;
 	
-	//UIAccelerationValue speedX_;
-	//UIAccelerationValue speedY_;
-
 	NSInteger integer_BallCount;
 	
 	NSMutableArray *array_Ball;
@@ -52,24 +49,26 @@
 {
 	[super viewDidLoad];
 
-	//app = [[UIApplication sharedApplication] delegate];
-	//app.stepDelegate = nil;//「self」では「相容れない'~'から'id<~>'に格納しようとしているよ」と出る。
 	
-	//NSLog(@"%s %s:%d", __PRETTY_FUNCTION__, __FILE__, __LINE__);
- 
-	// Multipeer Connectivityの初期化→サービス提供
+	self.label_TekiTensu_2.hidden = YES;
+	self.label_TekiTensu_3.hidden = YES;
+	self.label_TekiTensu_4.hidden = YES;
+
+	
 	self.serviceType = SERVICE_TYPE;
+	
 	
 	MCPeerID *peerID = [[MCPeerID alloc] initWithDisplayName: [UIDevice currentDevice].name];
 	
 	self.session = [[MCSession alloc] initWithPeer:peerID securityIdentity:nil encryptionPreference:MCEncryptionOptional];
-	self.session.delegate = self;
-	//self.session = session;
-
-	NSMutableDictionary *info = [NSMutableDictionary dictionaryWithCapacity: 10];
-	[info setObject:@"1.0" forKey:@"version"];
 	
-	//MCAdvertiserAssistant *assistant = [[MCAdvertiserAssistant alloc] initWithServiceType: self.serviceType
+	self.session.delegate = self;
+
+	
+	NSMutableDictionary *info = [NSMutableDictionary dictionaryWithCapacity: 10];
+
+	[info setObject: @"1.0" forKey: @"version"];
+	
 	self.assistant = [[MCAdvertiserAssistant alloc] initWithServiceType: self.serviceType
 														  discoveryInfo: info
 																session: self.session];
@@ -77,27 +76,10 @@
 	
 	[self.assistant start];
 	
-	//self.assistant = assistant;
-	//_remin = [[ReminderViewController alloc]init];
-	
+
 	NSNotificationCenter*   nc = [NSNotificationCenter defaultCenter];
 	[nc addObserver:self selector:@selector(success) name:@"tuuti" object:nil];
 	
-	
-	//固定
-//	_myself.text = [UIDevice currentDevice].name;
-	
-	NSLog(@"---------------%@",[UIDevice currentDevice].name);
-	/*    _companion.text = [didReceiveData: fromPeer:];
-	 NSLog(@"==========%@",);
-	 
-	 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-	 appDelegate.stepDelegate = self;
-	 
-	 */
-	//return (UI_USER_INTERFACE_IDIOM()==UIUserInterfaceIdiomPhone);
-	
-	//---------------------------------------
 	
 	timer = [NSTimer scheduledTimerWithTimeInterval: 0.5
 											 target: self
@@ -196,29 +178,7 @@
 	
 	[self initBall];
 	
-	self.label_TekiTensu_2.hidden = YES;
-	self.label_TekiTensu_3.hidden = YES;
-	self.label_TekiTensu_4.hidden = YES;
-	
 }
-
-
-/*
- -(void)kirakira
- {
- 
- if (i == 0)
- {
- self.hosi.hidden = YES;
- i = 1;
- }else
- {
- self.hosi.hidden = NO;
- i = 0;
- }
- 
- }
- */
 
 - (void)didReceiveMemoryWarning
 {
@@ -226,109 +186,6 @@
 	[super didReceiveMemoryWarning];
 	// Dispose of any resources that can be recreated.
 
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-
-	[super viewWillAppear:animated];
-	
-	//加速度センサーからの値取得開始
-//	UIAccelerometer *accelerometer = [UIAccelerometer sharedAccelerometer];
-//	accelerometer.updateInterval = 1.0 / 30.0;
-//	accelerometer.delegate = self;
-
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-	[super viewWillDisappear:animated];
-	
-	//speedX_ = speedY_ = 0.0;
-	
-	//加速度センサーからの値取得終了
-//	UIAccelerometer *accelerometer = [UIAccelerometer sharedAccelerometer];
-//	accelerometer.delegate = nil;
-
-}
-
-//加速度センサーからの通知
-//- (void)accelerometer:(UIAccelerometer *)accelerometer
-//		didAccelerate:(UIAcceleration *)acceleration
-//{
-//
-//	for ( NSMutableDictionary *dic in array_Ball ) {
-//		
-//		UIImageView *imageView = [dic objectForKey: @"image_view"];
-//		
-//		NSNumber *number = [dic objectForKey: @"speed_x"];
-//		float speed_x = number.floatValue;
-//		
-//		number           = [dic objectForKey: @"speed_y"];
-//		float speed_y = number.floatValue;
-//		
-//		speed_x += acceleration.x;
-//		speed_y += acceleration.y;
-//		
-//		CGFloat posX = imageView.center.x + speed_x;
-//		CGFloat posY = imageView.center.y - speed_y;
-//		
-//		//端にあたったら跳ね返る処理
-//		if (posX < 0.0) {
-//			
-//			posX = 0.0;
-//			
-//			//左の壁にあたったら0.4倍の力で跳ね返る
-//			speed_x *= -0.4;
-//			
-//		} else if (posX > self.view.bounds.size.width) {
-//			
-//			posX = self.view.bounds.size.width;
-//			
-//			//右の壁にあたったら0.4倍の力で跳ね返る
-//			speed_x *= -0.4;
-//			
-//		}
-//		if (posY < 0.0) {
-//			
-//			posY = 0.0;
-//			
-//			//上の壁にあたっても跳ね返らない
-//			speed_y = 0.0;
-//			
-//		} else if (posY > self.view.bounds.size.height) {
-//			
-//			posY = self.view.bounds.size.height;
-//			
-//			//下の壁にあたったら1.5倍の力で跳ね返る
-//			speed_y *= -1.5;
-//			
-//		}
-//		
-//		imageView.center = CGPointMake( posX, posY );
-//		
-//		NSNumber *number_x = [[NSNumber alloc] initWithFloat: speed_x];
-//		NSNumber *number_y = [[NSNumber alloc] initWithFloat: speed_y];
-//		
-//		[dic setObject: imageView forKey: @"image_view"];
-//		[dic setObject: number_x  forKey: @"speed_x"];
-//		[dic setObject: number_y  forKey: @"speed_y"];
-//		
-//	}
-//	
-//}
-
-//ローパスフィルタ
-- (CGFloat)lowpassFilter:(CGFloat)accel before:(CGFloat)before
-{
-	static const CGFloat kFilteringFactor = 0.1;
-	return (accel * kFilteringFactor) + (before * (1.0 - kFilteringFactor));
-}
-
-//ハイパスフィルタ
-- (CGFloat)highpassFilter:(CGFloat)accel before:(CGFloat)before
-{
-	return (accel - [self lowpassFilter:accel before:before]);
 }
 
 - (void)showAlert:(NSString *)title message:(NSString *)message
@@ -352,43 +209,30 @@
 	return NO;
 }
 
-
-/*
- //多分これは重要！！！後で解読せよ！！
- - (void)browser:(MCNearbyServiceBrowser *)browser foundPeer:(MCPeerID *)peerID withDiscoveryInfo:(NSDictionary *)info
- {
- 
- NSLog(@"found Peer : %@", peerID.displayName);
- //[self showAlert:@"found Peer" message:peerID.displayName];
- // if([self isPhone]){
- // _companion.text = peerID.displayName;
- // }else{
- // _companion.text = peerID.displayName;
- // }
- // [nearbyServiceBrowser invitePeer:peerID toSession:session withContext:[@"Welcome" dataUsingEncoding:NSUTF8StringEncoding] timeout:10];
- }
- 
- */
-/*
- - (void)browser:(MCNearbyServiceBrowser *)browser lostPeer:(MCPeerID *)peerID
- {
- 
- }
- */
-
-- (void)advertiser:(MCNearbyServiceAdvertiser *)advertiser didNotStartAdvertisingPeer:(NSError *)error
+- (void)        advertiser: (MCNearbyServiceAdvertiser *)advertiser
+didNotStartAdvertisingPeer: (NSError *)error
 {
-	if(error){
+
+	if ( error ) {
+	
 		//        NSLog(@"%@", [error localizedDescription]);
-		[self showAlert:@"ERROR didNotStartAdvertisingPeer" message:[error localizedDescription]];
+		[self showAlert: @"ERROR didNotStartAdvertisingPeer"
+				message: [error localizedDescription]];
+
 	}
+
 }
 
-- (void)advertiser:(MCNearbyServiceAdvertiser *)advertiser didReceiveInvitationFromPeer:(MCPeerID *)peerID withContext:(NSData *)context invitationHandler:(void (^)(BOOL accept, MCSession *session))invitationHandler
+- (void)          advertiser: (MCNearbyServiceAdvertiser *)advertiser
+didReceiveInvitationFromPeer: (MCPeerID *)peerID
+				 withContext: (NSData *)context
+		   invitationHandler: ( void (^)( BOOL accept, MCSession *session ))invitationHandler
 {
 	
 	invitationHandler(TRUE, self.session);
+
 	[self showAlert:@"didReceiveInvitationFromPeer" message:@"accept invitation!"];
+
 }
 
 
