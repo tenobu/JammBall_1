@@ -16,6 +16,7 @@
 		98CDD7A419DE332B00A83271 /* JammBall_1Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 98CDD7A319DE332B00A83271 /* JammBall_1Tests.m */; };
 		98CDD7E219DE33CF00A83271 /* ball.png in Resources */ = {isa = PBXBuildFile; fileRef = 98CDD7E019DE33CF00A83271 /* ball.png */; };
 		98CDD7E319DE33CF00A83271 /* blackhall.png in Resources */ = {isa = PBXBuildFile; fileRef = 98CDD7E119DE33CF00A83271 /* blackhall.png */; };
+		98CDD81C19DE61F400A83271 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98CDD81B19DE61F400A83271 /* CoreMotion.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,7 @@
 		98CDD7A319DE332B00A83271 /* JammBall_1Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JammBall_1Tests.m; sourceTree = "<group>"; };
 		98CDD7E019DE33CF00A83271 /* ball.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ball.png; sourceTree = "<group>"; };
 		98CDD7E119DE33CF00A83271 /* blackhall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blackhall.png; sourceTree = "<group>"; };
+		98CDD81B19DE61F400A83271 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				98CDD81C19DE61F400A83271 /* CoreMotion.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -67,6 +70,7 @@
 		98CDD77B19DE332B00A83271 = {
 			isa = PBXGroup;
 			children = (
+				98CDD81B19DE61F400A83271 /* CoreMotion.framework */,
 				98CDD78619DE332B00A83271 /* JammBall_1 */,
 				98CDD7A019DE332B00A83271 /* JammBall_1Tests */,
 				98CDD78519DE332B00A83271 /* Products */,

@@ -11,6 +11,7 @@
 #import "AppDelegate.h"
 #import <EventKit/EventKit.h>
 #import <EventKitUI/EventKitUI.h>
+#import <CoreMotion/CoreMotion.h>
 
 @interface ViewController()
 {
@@ -25,8 +26,11 @@
 	
 	NSTimer *timer, *timer2, *timer_Kieru;
 	
-	UIAccelerationValue speedX_;
-	UIAccelerationValue speedY_;
+	//加速度センサー
+	CMMotionManager *motionManager;
+	
+	//UIAccelerationValue speedX_;
+	//UIAccelerationValue speedY_;
 
 	NSInteger integer_BallCount;
 	
@@ -40,21 +44,9 @@
 @implementation ViewController
 {
 
-	UILabel *aiteno;
-	int i;
+	//UILabel *aiteno;
+	//int i;
 }
-
-/*
- @synthesize myPeerID;
- @synthesize serviceType;
- @synthesize nearbyServiceAdvertiser;
- @synthesize nearbyServiceBrowser;
- @synthesize session;
- 
- @synthesize myself;
- @synthesize companion;
- */
-
 
 - (void)viewDidLoad
 {
@@ -115,6 +107,90 @@
 	
 	//背景色を白に指定
 	self.view.backgroundColor = [UIColor whiteColor];
+
+	
+	motionManager = [[CMMotionManager alloc] init];
+	
+	if ( motionManager.accelerometerAvailable ) {
+
+		// センサーの更新間隔の指定
+		motionManager.accelerometerUpdateInterval = 0.03;
+		
+		// ハンドラを設定
+		CMAccelerometerHandler handler = ^( CMAccelerometerData *data, NSError *error )
+		{
+			
+			// 加速度センサー
+			double xac = data.acceleration.x;
+			double yac = data.acceleration.y;
+			
+			for ( NSMutableDictionary *dic in array_Ball ) {
+				
+				UIImageView *imageView = [dic objectForKey: @"image_view"];
+				
+				NSNumber *number = [dic objectForKey: @"speed_x"];
+				float speed_x = number.floatValue;
+				
+				number           = [dic objectForKey: @"speed_y"];
+				float speed_y = number.floatValue;
+				
+				speed_x += xac;
+				speed_y += yac;
+				
+				CGFloat posX = imageView.center.x + speed_x;
+				CGFloat posY = imageView.center.y - speed_y;
+				
+				//端にあたったら跳ね返る処理
+				if (posX < 0.0) {
+					
+					posX = 0.0;
+					
+					//左の壁にあたったら0.4倍の力で跳ね返る
+					speed_x *= -0.4;
+					
+				} else if (posX > self.view.bounds.size.width) {
+					
+					posX = self.view.bounds.size.width;
+					
+					//右の壁にあたったら0.4倍の力で跳ね返る
+					speed_x *= -0.4;
+					
+				}
+				if (posY < 0.0) {
+					
+					posY = 0.0;
+					
+					//上の壁にあたっても跳ね返らない
+					speed_y = 0.0;
+					
+				} else if (posY > self.view.bounds.size.height) {
+					
+					posY = self.view.bounds.size.height;
+					
+					//下の壁にあたったら1.4倍の力で跳ね返る
+					speed_y *= -1.4;//-1.5
+					
+				}
+				
+				imageView.center = CGPointMake( posX, posY );
+				
+				NSNumber *number_x = [[NSNumber alloc] initWithFloat: speed_x];
+				NSNumber *number_y = [[NSNumber alloc] initWithFloat: speed_y];
+				
+				[dic setObject: imageView forKey: @"image_view"];
+				[dic setObject: number_x  forKey: @"speed_x"];
+				[dic setObject: number_y  forKey: @"speed_y"];
+				
+			}
+
+		};
+
+		// 加速度の取得開始
+		[motionManager startAccelerometerUpdatesToQueue: [NSOperationQueue currentQueue]
+											withHandler: handler];
+		
+	}
+	
 	
 	array_Ball = [[NSMutableArray alloc] init];
 	
@@ -143,98 +219,104 @@
  
  }
  */
+
 - (void)didReceiveMemoryWarning
 {
+
 	[super didReceiveMemoryWarning];
 	// Dispose of any resources that can be recreated.
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
+
 	[super viewWillAppear:animated];
 	
 	//加速度センサーからの値取得開始
-	UIAccelerometer *accelerometer = [UIAccelerometer sharedAccelerometer];
-	accelerometer.updateInterval = 1.0 / 30.0;
-	accelerometer.delegate = self;
+//	UIAccelerometer *accelerometer = [UIAccelerometer sharedAccelerometer];
+//	accelerometer.updateInterval = 1.0 / 30.0;
+//	accelerometer.delegate = self;
+
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
 	[super viewWillDisappear:animated];
 	
-	speedX_ = speedY_ = 0.0;
+	//speedX_ = speedY_ = 0.0;
 	
 	//加速度センサーからの値取得終了
-	UIAccelerometer *accelerometer = [UIAccelerometer sharedAccelerometer];
-	accelerometer.delegate = nil;
+//	UIAccelerometer *accelerometer = [UIAccelerometer sharedAccelerometer];
+//	accelerometer.delegate = nil;
+
 }
 
 //加速度センサーからの通知
-- (void)accelerometer:(UIAccelerometer *)accelerometer
-		didAccelerate:(UIAcceleration *)acceleration
-{
-
-	for ( NSMutableDictionary *dic in array_Ball ) {
-		
-		UIImageView *imageView = [dic objectForKey: @"image_view"];
-		
-		NSNumber *number = [dic objectForKey: @"speed_x"];
-		float speed_x = number.floatValue;
-		
-		number           = [dic objectForKey: @"speed_y"];
-		float speed_y = number.floatValue;
-		
-		speed_x += acceleration.x;
-		speed_y += acceleration.y;
-		
-		CGFloat posX = imageView.center.x + speed_x;
-		CGFloat posY = imageView.center.y - speed_y;
-		
-		//端にあたったら跳ね返る処理
-		if (posX < 0.0) {
-			
-			posX = 0.0;
-			
-			//左の壁にあたったら0.4倍の力で跳ね返る
-			speed_x *= -0.4;
-			
-		} else if (posX > self.view.bounds.size.width) {
-			
-			posX = self.view.bounds.size.width;
-			
-			//右の壁にあたったら0.4倍の力で跳ね返る
-			speed_x *= -0.4;
-			
-		}
-		if (posY < 0.0) {
-			
-			posY = 0.0;
-			
-			//上の壁にあたっても跳ね返らない
-			speed_y = 0.0;
-			
-		} else if (posY > self.view.bounds.size.height) {
-			
-			posY = self.view.bounds.size.height;
-			
-			//下の壁にあたったら1.5倍の力で跳ね返る
-			speed_y *= -1.5;
-			
-		}
-		
-		imageView.center = CGPointMake( posX, posY );
-		
-		NSNumber *number_x = [[NSNumber alloc] initWithFloat: speed_x];
-		NSNumber *number_y = [[NSNumber alloc] initWithFloat: speed_y];
-		
-		[dic setObject: imageView forKey: @"image_view"];
-		[dic setObject: number_x  forKey: @"speed_x"];
-		[dic setObject: number_y  forKey: @"speed_y"];
-		
-	}
-	
-}
+//- (void)accelerometer:(UIAccelerometer *)accelerometer
+//		didAccelerate:(UIAcceleration *)acceleration
+//{
+//
+//	for ( NSMutableDictionary *dic in array_Ball ) {
+//		
+//		UIImageView *imageView = [dic objectForKey: @"image_view"];
+//		
+//		NSNumber *number = [dic objectForKey: @"speed_x"];
+//		float speed_x = number.floatValue;
+//		
+//		number           = [dic objectForKey: @"speed_y"];
+//		float speed_y = number.floatValue;
+//		
+//		speed_x += acceleration.x;
+//		speed_y += acceleration.y;
+//		
+//		CGFloat posX = imageView.center.x + speed_x;
+//		CGFloat posY = imageView.center.y - speed_y;
+//		
+//		//端にあたったら跳ね返る処理
+//		if (posX < 0.0) {
+//			
+//			posX = 0.0;
+//			
+//			//左の壁にあたったら0.4倍の力で跳ね返る
+//			speed_x *= -0.4;
+//			
+//		} else if (posX > self.view.bounds.size.width) {
+//			
+//			posX = self.view.bounds.size.width;
+//			
+//			//右の壁にあたったら0.4倍の力で跳ね返る
+//			speed_x *= -0.4;
+//			
+//		}
+//		if (posY < 0.0) {
+//			
+//			posY = 0.0;
+//			
+//			//上の壁にあたっても跳ね返らない
+//			speed_y = 0.0;
+//			
+//		} else if (posY > self.view.bounds.size.height) {
+//			
+//			posY = self.view.bounds.size.height;
+//			
+//			//下の壁にあたったら1.5倍の力で跳ね返る
+//			speed_y *= -1.5;
+//			
+//		}
+//		
+//		imageView.center = CGPointMake( posX, posY );
+//		
+//		NSNumber *number_x = [[NSNumber alloc] initWithFloat: speed_x];
+//		NSNumber *number_y = [[NSNumber alloc] initWithFloat: speed_y];
+//		
+//		[dic setObject: imageView forKey: @"image_view"];
+//		[dic setObject: number_x  forKey: @"speed_x"];
+//		[dic setObject: number_y  forKey: @"speed_y"];
+//		
+//	}
+//	
+//}
 
 //ローパスフィルタ
 - (CGFloat)lowpassFilter:(CGFloat)accel before:(CGFloat)before

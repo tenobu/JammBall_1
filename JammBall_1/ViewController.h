@@ -26,10 +26,6 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView_Ana;
 
-//@property MCSession *session;
-//@property NSString *serviceType;
-//@property id<MultiPeerStepperDelegate> stepDelegate;
-
 @property (strong, nonatomic) MCPeerID *myPeerID;
 @property (strong, nonatomic) NSString *serviceType;
 @property (strong, nonatomic) MCNearbyServiceAdvertiser *nearbyServiceAdvertiser;
@@ -37,10 +33,6 @@
 @property (strong, nonatomic) MCSession *session;
 //@property id stepDelegate;
 //@property (assign,nonatomic)id<UIPageViewControllerDelegate>delegate;
-
-
-
-@property (weak, nonatomic) IBOutlet UIImageView *startView;
 
 
 - (IBAction)connect:(UIButton *)sender;
@@ -65,51 +57,5 @@
 @property (weak, nonatomic) IBOutlet UILabel *label_TekiTensu_2;
 @property (weak, nonatomic) IBOutlet UILabel *label_TekiTensu_3;
 @property (weak, nonatomic) IBOutlet UILabel *label_TekiTensu_4;
-
-
-
-
-//-----------------------------------------------------
-
-
-
-
-
-
-/*
- 
- - (void)browser:(MCNearbyServiceBrowser *)browser didNotStartBrowsingForPeers:(NSError *)error;
- 
- 
- - (void)browser:(MCNearbyServiceBrowser *)browser foundPeer:(MCPeerID *)peerID withDiscoveryInfo:(NSDictionary *)info;
- 
- 
- - (void)browser:(MCNearbyServiceBrowser *)browser lostPeer:(MCPeerID *)peerID;
- 
- 
- 
- - (void)advertiser:(MCNearbyServiceAdvertiser *)advertiser didNotStartAdvertisingPeer:(NSError *)error;
- 
- 
- - (void)advertiser:(MCNearbyServiceAdvertiser *)advertiser didReceiveInvitationFromPeer:(MCPeerID *)peerID withContext:(NSData *)context invitationHandler:(void (^)(BOOL accept, MCSession *session))invitationHandler;
- 
- 
- 
- - (void)session:(MCSession *)session didReceiveData:(NSData *)data fromPeer:(MCPeerID *)peerID;
- 
- 
- - (void)session:(MCSession *)session didStartReceivingResourceWithName:(NSString *)resourceName fromPeer:(MCPeerID *)peerID withProgress:(NSProgress *)progress;
- 
- 
- - (void)session:(MCSession *)session didFinishReceivingResourceWithName:(NSString *)resourceName fromPeer:(MCPeerID *)peerID atURL:(NSURL *)localURL withError:(NSError *)error;
- 
- - (void)session:(MCSession *)session didReceiveStream:(NSInputStream *)stream withName:(NSString *)streamName fromPeer:(MCPeerID *)peerID;
- 
- 
- - (void)session:(MCSession *)session peer:(MCPeerID *)peerID didChangeState:(MCSessionState)state;
- 
- 
- - (BOOL)session:(MCSession *)session didReceiveCertificate:(NSArray *)certificate fromPeer:(MCPeerID *)peerID certificateHandler:(void (^)(BOOL accept))certificateHandler;
- */
 
 @end
