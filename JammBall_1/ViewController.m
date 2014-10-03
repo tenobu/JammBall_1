@@ -17,6 +17,8 @@
 	
 @private
 	
+	AppDelegate *app;
+
 	NSInteger integer_MyTensu;
 	
 	NSString *string_1;
@@ -32,15 +34,12 @@
 	
 }
 
-//@property ReminderViewController *remin;
-
 @end
 
 
 @implementation ViewController
 {
-	//MCBrowserViewController *_browserViewController;
-	AppDelegate *app;
+
 	UILabel *aiteno;
 	int i;
 }
@@ -61,21 +60,21 @@
 {
 	[super viewDidLoad];
 
-	app = [[UIApplication sharedApplication] delegate];
+	//app = [[UIApplication sharedApplication] delegate];
 	//app.stepDelegate = nil;//「self」では「相容れない'~'から'id<~>'に格納しようとしているよ」と出る。
 	
-	NSLog(@"%s %s:%d", __PRETTY_FUNCTION__, __FILE__, __LINE__);
+	//NSLog(@"%s %s:%d", __PRETTY_FUNCTION__, __FILE__, __LINE__);
  
 	// Multipeer Connectivityの初期化→サービス提供
 	self.serviceType = SERVICE_TYPE;
 	
-	MCPeerID *peerID = [[MCPeerID alloc] initWithDisplayName:[UIDevice currentDevice].name];
+	MCPeerID *peerID = [[MCPeerID alloc] initWithDisplayName: [UIDevice currentDevice].name];
 	
 	self.session = [[MCSession alloc] initWithPeer:peerID securityIdentity:nil encryptionPreference:MCEncryptionOptional];
 	self.session.delegate = self;
 	//self.session = session;
 
-	NSMutableDictionary *info = [NSMutableDictionary dictionaryWithCapacity:10];
+	NSMutableDictionary *info = [NSMutableDictionary dictionaryWithCapacity: 10];
 	[info setObject:@"1.0" forKey:@"version"];
 	
 	//MCAdvertiserAssistant *assistant = [[MCAdvertiserAssistant alloc] initWithServiceType: self.serviceType
@@ -786,7 +785,7 @@ loop:
 		NSInteger ax = self.imageView_Ana.center.x;
 		NSInteger ay = self.imageView_Ana.center.y;
 		
-		NSLog( @"%ld > %ld && %ld < %ld && %ld > %ld && %ld < %ld", ix, ax - 20, ix, ax + 20, iy, ay - 20, iy, ay + 20 );
+		//NSLog( @"%ld > %ld && %ld < %ld && %ld > %ld && %ld < %ld", ix, ax - 20, ix, ax + 20, iy, ay - 20, iy, ay + 20 );
 		
 		if ( ix > ax - 20 && ix < ax + 20 &&
 			iy > ay - 20 && iy < ay + 20     ) {

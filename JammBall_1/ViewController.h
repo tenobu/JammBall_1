@@ -7,23 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <MultipeerConnectivity/MultipeerConnectivity.h>
 
 #import "AppDelegate.h"
-//#import "ReminderViewController.h"
 
 @import MultipeerConnectivity;
 
 #define SERVICE_TYPE @"MCStepper"
-
-//@protocol MultiPeerStepperDelegate<NSObject>
-//
-//- (void)sendDictionary:(NSDictionary*)dic;
-//- (void)recvDictionary:(NSDictionary*)dic;
-//- (void)sendData: (NSString *) str;
-//- (void)success;
-//
-//@end
 
 @interface ViewController : UIViewController < MCNearbyServiceAdvertiserDelegate, MCNearbyServiceBrowserDelegate, NSStreamDelegate,MCBrowserViewControllerDelegate, MCSessionDelegate, MCAdvertiserAssistantDelegate >
 {
@@ -35,7 +24,6 @@
 
 @property MCAdvertiserAssistant *assistant;
 
-@property (weak, nonatomic) IBOutlet UIButton *adButton;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView_Ana;
 
 //@property MCSession *session;
