@@ -7,8 +7,10 @@
 //
 
 #import "ViewController.h"
-#import "AppDelegate.h"
 
+#import "AppDelegate.h"
+#import <EventKit/EventKit.h>
+#import <EventKitUI/EventKitUI.h>
 
 @interface ViewController()
 {
@@ -21,9 +23,6 @@
 	
 	NSTimer *timer, *timer2, *timer_Kieru;
 	
-	
-//	UIImageView *imageView_[4];
-//
 	UIAccelerationValue speedX_;
 	UIAccelerationValue speedY_;
 
@@ -646,7 +645,9 @@ withDiscoveryInfo: (NSDictionary *)info{
 		[theStream removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
 	}
 }
-- (void)saveRiminder:(NSString *)title note:(NSString *) note
+
+- (void)saveRiminder: (NSString *)title
+				note: (NSString *) note
 {
 	
 	EKEventStore *eventStore = [[EKEventStore alloc] init];

@@ -7,16 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <EventKit/EventKit.h>
-#import <EventKitUI/EventKitUI.h>
-#import "ViewController.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
-{
-
-	EKCalendar *calendar;
-	
-}
 
 @property (strong, nonatomic) UIWindow *window;
 
