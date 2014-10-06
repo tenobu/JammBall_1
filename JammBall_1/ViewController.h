@@ -24,8 +24,6 @@
 
 @property MCAdvertiserAssistant *assistant;
 
-@property (weak, nonatomic) IBOutlet UIImageView *imageView_Ana;
-
 @property (strong, nonatomic) MCPeerID *myPeerID;
 @property (strong, nonatomic) NSString *serviceType;
 @property (strong, nonatomic) MCNearbyServiceAdvertiser *nearbyServiceAdvertiser;

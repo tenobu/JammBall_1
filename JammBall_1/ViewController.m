@@ -31,19 +31,19 @@
 	
 	NSInteger integer_BallCount;
 	
+	//穴の複数管理
+	NSInteger integer_AnaCount;
+	NSMutableArray *array_Ana;
+	NSInteger integer_xy[10][2];
+	
+	//ボールの複数管理
 	NSMutableArray *array_Ball;
 	
 }
 
 @end
 
-
 @implementation ViewController
-{
-
-	//UILabel *aiteno;
-	//int i;
-}
 
 - (void)viewDidLoad
 {
@@ -60,7 +60,9 @@
 	
 	MCPeerID *peerID = [[MCPeerID alloc] initWithDisplayName: [UIDevice currentDevice].name];
 	
-	self.session = [[MCSession alloc] initWithPeer:peerID securityIdentity:nil encryptionPreference:MCEncryptionOptional];
+	self.session = [[MCSession alloc] initWithPeer: peerID
+								  securityIdentity: nil
+							  encryptionPreference: MCEncryptionOptional];
 	
 	self.session.delegate = self;
 
@@ -174,7 +176,12 @@
 	}
 	
 	
+	integer_AnaCount = 3;
+	array_Ana  = [[NSMutableArray alloc] init];
+	
 	array_Ball = [[NSMutableArray alloc] init];
+	
+	[self initAna];
 	
 	[self initBall];
 	
@@ -486,7 +493,7 @@ withDiscoveryInfo: (NSDictionary *)info{
 	
 	[self initBall];
 	
-	NSLog( @"count = %d", [array_Ball count] );
+//	NSLog( @"count = %d", [array_Ball count] );
 	
 	timer2 = [NSTimer scheduledTimerWithTimeInterval: 0.1
 											  target: self
@@ -549,14 +556,14 @@ withDiscoveryInfo: (NSDictionary *)info{
 // ストリームの状態が変化した
 - (void)stream:(NSStream *)theStream handleEvent:(NSStreamEvent)streamEvent;
 {
-	NSLog(@"-stream: handleEvent: %@%@%@%@%@%@",
-		  streamEvent & NSStreamEventNone ? @"NSStreamEventNone, " : @"",
-		  streamEvent & NSStreamEventOpenCompleted ? @"NSStreamEventOpenCompleted, " : @"",
-		  streamEvent & NSStreamEventHasBytesAvailable ? @"NSStreamEventHasBytesAvailable, " : @"",
-		  streamEvent & NSStreamEventHasSpaceAvailable ? @"NSStreamEventHasSpaceAvailable, " : @"",
-		  streamEvent & NSStreamEventErrorOccurred ? @"NSStreamEventErrorOccurred, " : @"",
-		  streamEvent & NSStreamEventEndEncountered ? @"NSStreamEventEndEncountered, " : @""
-		  );
+//	NSLog(@"-stream: handleEvent: %@%@%@%@%@%@",
+//		  streamEvent & NSStreamEventNone ? @"NSStreamEventNone, " : @"",
+//		  streamEvent & NSStreamEventOpenCompleted ? @"NSStreamEventOpenCompleted, " : @"",
+//		  streamEvent & NSStreamEventHasBytesAvailable ? @"NSStreamEventHasBytesAvailable, " : @"",
+//		  streamEvent & NSStreamEventHasSpaceAvailable ? @"NSStreamEventHasSpaceAvailable, " : @"",
+//		  streamEvent & NSStreamEventErrorOccurred ? @"NSStreamEventErrorOccurred, " : @"",
+//		  streamEvent & NSStreamEventEndEncountered ? @"NSStreamEventEndEncountered, " : @""
+//		  );
 	// データ受信
 	if (streamEvent & NSStreamEventHasBytesAvailable) {
 		int32_t steps;
@@ -633,7 +640,7 @@ withDiscoveryInfo: (NSDictionary *)info{
 //	
 //}
 
-- (IBAction)button_Action:(id)sender
+- (IBAction)button_BallIn_Action:(id)sender
 {
 
 	integer_MyTensu += 10;
@@ -663,9 +670,65 @@ withDiscoveryInfo: (NSDictionary *)info{
 	
 }
 
+- (void)initAna
+{
+	
+	CGRect r = [[UIScreen mainScreen] applicationFrame];
+
+	for ( int i = 0; i < integer_AnaCount; i ++ ) {
+		
+		NSInteger x = ( arc4random() % (NSInteger)( r.size.width  - 100 ) + 50 );
+		NSInteger y = ( arc4random() % (NSInteger)( r.size.height - 100 ) + 50 );
+		
+		NSLog( @"%@", NSStringFromCGRect( r ));
+		NSLog( @"x = %ld, y = %ld", x , y );
+		
+		//	for ( NSDictionary *old_dic in array_Ana ) {
+		//
+		//
+		//	}
+		
+		NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
+		
+		//UIImageView追加
+		UIImage* image = [UIImage imageNamed: @"blackhall.png"];
+		
+		UIImageView *imageView = [[UIImageView alloc] initWithImage: image];
+		
+		imageView.frame  = CGRectMake( x, y, 50, 50 );
+		
+		imageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin |UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+		
+		[self.view addSubview: imageView];
+		
+		
+		[dic setObject: imageView forKey: @"image_view"];
+		
+		
+		[array_Ana addObject: dic];
+		
+	}
+	
+}
+
+- (void)removeAllAna
+{
+	
+	for ( NSDictionary *dic in array_Ana ) {
+	
+		UIImageView *imageView = [dic objectForKey: @"image_view"];
+		
+		[imageView removeFromSuperview];
+
+	}
+	
+	[array_Ana removeAllObjects];
+
+}
+
 - (void)initBall
 {
-
+	
 	NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
 	
 	//UIImageView追加
@@ -696,70 +759,70 @@ withDiscoveryInfo: (NSDictionary *)info{
 - (void)tamaDown
 {
 	
-	int index;
-	
-loop:
-	
-	index = 0;
-	
-	for ( NSMutableDictionary *dic in array_Ball ) {
-		
-		UIImageView *imageView = [dic objectForKey: @"image_view"];
-		
-		NSInteger ix = imageView.center.x;
-		NSInteger iy = imageView.center.y;
-		NSInteger ax = self.imageView_Ana.center.x;
-		NSInteger ay = self.imageView_Ana.center.y;
-		
-		//NSLog( @"%ld > %ld && %ld < %ld && %ld > %ld && %ld < %ld", ix, ax - 20, ix, ax + 20, iy, ay - 20, iy, ay + 20 );
-		
-		if ( ix > ax - 20 && ix < ax + 20 &&
-			iy > ay - 20 && iy < ay + 20     ) {
-			
-			imageView.hidden = YES;
-			
-			integer_MyTensu += 10;
-			
-			NSString *string = [NSString stringWithFormat: @"%06ld", integer_MyTensu];
-			self.label_MyTensu.text = [NSString stringWithFormat: @"自分    %@", string];
-			
-			NSError *error = nil;
-			
-			//送信する文字列を作成
-			//NSData へ文字列を変換
-			NSData *data = [string dataUsingEncoding: NSUTF8StringEncoding];
-			
-			//送信先の Peer を指定する
-			NSArray *peerIDs = self.session.connectedPeers;
-			
-			[self.session sendData: data
-						   toPeers: peerIDs
-						  withMode: MCSessionSendDataReliable
-							 error: &error];
-			
-			if ( error ) {
-				
-				NSLog( @"%@", error );
-				
-			}
-			
-			[imageView removeFromSuperview];
-			
-			[array_Ball removeObjectAtIndex: index];
-			
-			timer_Kieru = [NSTimer scheduledTimerWithTimeInterval: 5.0
-														   target: self
-														 selector: @selector( tabaArawaru )
-														 userInfo: nil
-														  repeats: NO];
-			
-			goto loop;
-			
-		}
-
-		index ++;
-		
-	}
+//	int index;
+//	
+//loop:
+//	
+//	index = 0;
+//	
+//	for ( NSMutableDictionary *dic in array_Ball ) {
+//		
+//		UIImageView *imageView = [dic objectForKey: @"image_view"];
+//		
+//		NSInteger ix = imageView.center.x;
+//		NSInteger iy = imageView.center.y;
+//		NSInteger ax = self.imageView_Ana.center.x;
+//		NSInteger ay = self.imageView_Ana.center.y;
+//		
+//		//NSLog( @"%ld > %ld && %ld < %ld && %ld > %ld && %ld < %ld", ix, ax - 20, ix, ax + 20, iy, ay - 20, iy, ay + 20 );
+//		
+//		if ( ix > ax - 20 && ix < ax + 20 &&
+//			iy > ay - 20 && iy < ay + 20     ) {
+//			
+//			imageView.hidden = YES;
+//			
+//			integer_MyTensu += 10;
+//			
+//			NSString *string = [NSString stringWithFormat: @"%06ld", integer_MyTensu];
+//			self.label_MyTensu.text = [NSString stringWithFormat: @"自分    %@", string];
+//			
+//			NSError *error = nil;
+//			
+//			//送信する文字列を作成
+//			//NSData へ文字列を変換
+//			NSData *data = [string dataUsingEncoding: NSUTF8StringEncoding];
+//			
+//			//送信先の Peer を指定する
+//			NSArray *peerIDs = self.session.connectedPeers;
+//			
+//			[self.session sendData: data
+//						   toPeers: peerIDs
+//						  withMode: MCSessionSendDataReliable
+//							 error: &error];
+//			
+//			if ( error ) {
+//				
+//				NSLog( @"%@", error );
+//				
+//			}
+//			
+//			[imageView removeFromSuperview];
+//			
+//			[array_Ball removeObjectAtIndex: index];
+//			
+//			timer_Kieru = [NSTimer scheduledTimerWithTimeInterval: 5.0
+//														   target: self
+//														 selector: @selector( tabaArawaru )
+//														 userInfo: nil
+//														  repeats: NO];
+//			
+//			goto loop;
+//			
+//		}
+//
+//		index ++;
+//		
+//	}
 	
 }
 
@@ -767,6 +830,15 @@ loop:
 {
 
 	[self initBall];
+	
+}
+
+- (IBAction)button_Ana_Action: (id)sender
+{
+	
+	[self removeAllAna];
+	
+	[self initAna];
 	
 }
 

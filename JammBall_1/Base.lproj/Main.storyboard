@@ -57,20 +57,28 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bBh-kW-Yjc">
-                                <rect key="frame" x="277" y="550" width="46" height="30"/>
-                                <state key="normal" title="Button">
+                                <rect key="frame" x="278" y="550" width="43" height="30"/>
+                                <state key="normal" title="Ball In">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="button_Action:" destination="BYZ-38-t0r" eventType="touchUpInside" id="liX-QS-KRd"/>
+                                    <action selector="button_BallIn_Action:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Fqp-NG-T3z"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="blackhall.png" translatesAutoresizingMaskIntoConstraints="NO" id="jzK-zn-DwN">
-                                <rect key="frame" x="183" y="173" width="40" height="40"/>
-                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nb7-lc-CE1">
+                                <rect key="frame" x="16" y="550" width="30" height="30"/>
+                                <state key="normal" title="Ana">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="button_Ana_Action:" destination="BYZ-38-t0r" eventType="touchUpInside" id="OlT-bD-uiP"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="nb7-lc-CE1" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="FL1-AR-LUs"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="nb7-lc-CE1" secondAttribute="bottom" constant="20" id="LiS-1j-AeW"/>
                             <constraint firstAttribute="centerX" secondItem="bBh-kW-Yjc" secondAttribute="centerX" id="PlM-Dn-c2f"/>
                             <constraint firstItem="vUb-nR-aH1" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="Pla-Te-q19"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="bBh-kW-Yjc" secondAttribute="bottom" constant="20" id="gq9-oe-g88"/>
@@ -78,7 +86,6 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="imageView_Ana" destination="jzK-zn-DwN" id="br8-zr-MzJ"/>
                         <outlet property="label_MyTensu" destination="aj9-FJ-XGK" id="Eem-68-OxO"/>
                         <outlet property="label_TekiTensu_1" destination="HeQ-c2-Urs" id="Gwr-MV-D0D"/>
                         <outlet property="label_TekiTensu_2" destination="wtA-rN-ZKz" id="0ir-l1-tMz"/>
@@ -91,7 +98,4 @@
             <point key="canvasLocation" x="139" y="-13"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="blackhall.png" width="807" height="807"/>
-    </resources>
 </document>
