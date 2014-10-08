@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9891DC8A19E2156B0000F1D7 /* GameView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9891DC8919E2156B0000F1D7 /* GameView.m */; };
 		98CDD78A19DE332B00A83271 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 98CDD78919DE332B00A83271 /* main.m */; };
 		98CDD78D19DE332B00A83271 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 98CDD78C19DE332B00A83271 /* AppDelegate.m */; };
 		98CDD79019DE332B00A83271 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98CDD78F19DE332B00A83271 /* ViewController.m */; };
@@ -31,8 +30,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		9891DC8819E2156B0000F1D7 /* GameView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameView.h; sourceTree = "<group>"; };
-		9891DC8919E2156B0000F1D7 /* GameView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameView.m; sourceTree = "<group>"; };
 		98CDD78419DE332B00A83271 /* JammBall_1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JammBall_1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		98CDD78819DE332B00A83271 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		98CDD78919DE332B00A83271 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -98,8 +95,6 @@
 				98CDD78C19DE332B00A83271 /* AppDelegate.m */,
 				98CDD78E19DE332B00A83271 /* ViewController.h */,
 				98CDD78F19DE332B00A83271 /* ViewController.m */,
-				9891DC8819E2156B0000F1D7 /* GameView.h */,
-				9891DC8919E2156B0000F1D7 /* GameView.m */,
 				98CDD79419DE332B00A83271 /* Images.xcassets */,
 				98CDD7DF19DE33CF00A83271 /* images */,
 				98CDD78719DE332B00A83271 /* Supporting Files */,
@@ -251,7 +246,6 @@
 			files = (
 				98CDD79019DE332B00A83271 /* ViewController.m in Sources */,
 				98CDD78D19DE332B00A83271 /* AppDelegate.m in Sources */,
-				9891DC8A19E2156B0000F1D7 /* GameView.m in Sources */,
 				98CDD78A19DE332B00A83271 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

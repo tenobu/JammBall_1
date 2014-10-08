@@ -45,4 +45,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *label_TekiTensu_3;
 @property (weak, nonatomic) IBOutlet UILabel *label_TekiTensu_4;
 
+- (void)initGame;
+- (void)initAna;
+- (void)removeAllAna;
+- (void)initBall;
+
 @end
