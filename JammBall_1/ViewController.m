@@ -11,33 +11,19 @@
 #import "AppDelegate.h"
 #import <EventKit/EventKit.h>
 #import <EventKitUI/EventKitUI.h>
-#import <CoreMotion/CoreMotion.h>
 
-@interface ViewController()
+@interface ViewController ()
 {
 	
 @private
 	
 	AppDelegate *app;
 
-	NSInteger integer_MyTensu;
-	
 	NSString *string_1;
 	
-	NSTimer *timer, *timer2, *timer_Kieru;
+	NSTimer *timer, *timer2;
 	
-	//加速度センサー
-	CMMotionManager *motionManager;
-	
-	NSInteger integer_BallCount;
-	
-	//穴の複数管理
-	NSInteger integer_AnaCount;
-	NSMutableArray *array_Ana;
-	NSInteger integer_xy[10][2];
-	
-	//ボールの複数管理
-	NSMutableArray *array_Ball;
+	NSInteger integer_MyTensu;
 	
 }
 
@@ -47,12 +33,13 @@
 
 - (void)viewDidLoad
 {
+	
 	[super viewDidLoad];
 
 	
-	self.label_TekiTensu_2.hidden = YES;
-	self.label_TekiTensu_3.hidden = YES;
-	self.label_TekiTensu_4.hidden = YES;
+//	self.label_TekiTensu_2.hidden = YES;
+//	self.label_TekiTensu_3.hidden = YES;
+//	self.label_TekiTensu_4.hidden = YES;
 
 	
 	self.serviceType = SERVICE_TYPE;
@@ -80,7 +67,10 @@
 	
 
 	NSNotificationCenter*   nc = [NSNotificationCenter defaultCenter];
-	[nc addObserver:self selector:@selector(success) name:@"tuuti" object:nil];
+	[nc addObserver: self
+		   selector: @selector( success )
+			   name: @"tuuti"
+			 object: nil];
 	
 	
 	timer = [NSTimer scheduledTimerWithTimeInterval: 0.5
@@ -91,99 +81,6 @@
 	
 	//背景色を白に指定
 	self.view.backgroundColor = [UIColor whiteColor];
-
-	
-	motionManager = [[CMMotionManager alloc] init];
-	
-	if ( motionManager.accelerometerAvailable ) {
-
-		// センサーの更新間隔の指定
-		motionManager.accelerometerUpdateInterval = 0.03;
-		
-		// ハンドラを設定
-		CMAccelerometerHandler handler = ^( CMAccelerometerData *data, NSError *error )
-		{
-			
-			// 加速度センサー
-			double xac = data.acceleration.x;
-			double yac = data.acceleration.y;
-			
-			for ( NSMutableDictionary *dic in array_Ball ) {
-				
-				UIImageView *imageView = [dic objectForKey: @"image_view"];
-				
-				NSNumber *number = [dic objectForKey: @"speed_x"];
-				float speed_x = number.floatValue;
-				
-				number           = [dic objectForKey: @"speed_y"];
-				float speed_y = number.floatValue;
-				
-				speed_x += xac;
-				speed_y += yac;
-				
-				CGFloat posX = imageView.center.x + speed_x;
-				CGFloat posY = imageView.center.y - speed_y;
-				
-				//端にあたったら跳ね返る処理
-				if (posX < 0.0) {
-					
-					posX = 0.0;
-					
-					//左の壁にあたったら0.4倍の力で跳ね返る
-					speed_x *= -0.4;
-					
-				} else if (posX > self.view.bounds.size.width) {
-					
-					posX = self.view.bounds.size.width;
-					
-					//右の壁にあたったら0.4倍の力で跳ね返る
-					speed_x *= -0.4;
-					
-				}
-				if (posY < 0.0) {
-					
-					posY = 0.0;
-					
-					//上の壁にあたっても跳ね返らない
-					speed_y = 0.0;
-					
-				} else if (posY > self.view.bounds.size.height) {
-					
-					posY = self.view.bounds.size.height;
-					
-					//下の壁にあたったら1.4倍の力で跳ね返る
-					speed_y *= -1.4;//-1.5
-					
-				}
-				
-				imageView.center = CGPointMake( posX, posY );
-				
-				NSNumber *number_x = [[NSNumber alloc] initWithFloat: speed_x];
-				NSNumber *number_y = [[NSNumber alloc] initWithFloat: speed_y];
-				
-				[dic setObject: imageView forKey: @"image_view"];
-				[dic setObject: number_x  forKey: @"speed_x"];
-				[dic setObject: number_y  forKey: @"speed_y"];
-				
-			}
-
-		};
-
-		// 加速度の取得開始
-		[motionManager startAccelerometerUpdatesToQueue: [NSOperationQueue currentQueue]
-											withHandler: handler];
-		
-	}
-	
-	
-	integer_AnaCount = 3;
-	array_Ana  = [[NSMutableArray alloc] init];
-	
-	array_Ball = [[NSMutableArray alloc] init];
-	
-	[self initAna];
-	
-	[self initBall];
 	
 }
 
@@ -195,18 +92,59 @@
 
 }
 
-- (void)showAlert:(NSString *)title message:(NSString *)message
+- (void)setSendData: (NSString *)string
 {
-	UIAlertView *alert=[[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+	
+	integer_MyTensu += 10;
+	
+	string = [NSString stringWithFormat: @"%06ld", integer_MyTensu];
+	self.label_MyTensu.text = [NSString stringWithFormat: @"自分 %@", string];
+	
+	NSError *error = nil;
+	
+	//送信する文字列を作成
+	//NSData へ文字列を変換
+	NSData *data = [string dataUsingEncoding: NSUTF8StringEncoding];
+	
+	//送信先の Peer を指定する
+	NSArray *peerIDs = self.session.connectedPeers;
+	
+	[self.session sendData: data
+				   toPeers: peerIDs
+				  withMode: MCSessionSendDataReliable
+					 error: &error];
+	
+	if ( error ) {
+		
+		NSLog( @"%@", error );
+		
+	}
+	
+}
+
+- (void)showAlert: (NSString *)title
+		  message: (NSString *)message
+{
+
+	UIAlertView *alert= [[UIAlertView alloc] initWithTitle: title
+												   message: message
+												  delegate: self
+										 cancelButtonTitle: @"OK"
+										 otherButtonTitles: nil];
+
 	[alert show];
 	
 }
 
-- (void)browser:(MCNearbyServiceBrowser *)browser didNotStartBrowsingForPeers:(NSError *)error
+- (void)            browser: (MCNearbyServiceBrowser *)browser
+didNotStartBrowsingForPeers: (NSError *)error
 {
+	
 	// BLog();
-	if(error){
+	if ( error ) {
+	
 		//        NSLog(@"[error localizedDescription] %@", [error localizedDescription]);
+	
 	}
 	
 }
@@ -236,15 +174,16 @@ didReceiveInvitationFromPeer: (MCPeerID *)peerID
 		   invitationHandler: ( void (^)( BOOL accept, MCSession *session ))invitationHandler
 {
 	
-	invitationHandler(TRUE, self.session);
+	invitationHandler( TRUE, self.session );
 
-	[self showAlert:@"didReceiveInvitationFromPeer" message:@"accept invitation!"];
+	[self showAlert: @"didReceiveInvitationFromPeer"
+			message: @"accept invitation!"];
 
 }
 
 
 // Multipeer Connectivityで接続先を見つけるUIを表示する
-- (IBAction)connect:(UIButton *)sender;
+- (IBAction)connect: (UIButton *)sender;
 {
 	
 	//AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -263,10 +202,13 @@ didReceiveInvitationFromPeer: (MCPeerID *)peerID
 }
 
 //キャンセルでviewを隠す
--(void)browserViewControllerWasCancelled:(MCBrowserViewController *)browserViewController
+-(void)browserViewControllerWasCancelled: (MCBrowserViewController *)browserViewController
 {
+
 	[browserViewController dismissViewControllerAnimated:YES completion:NULL];
+
 }
+
 //完了でviewをかくす
 -(void)browserViewControllerDidFinish:(MCBrowserViewController *)browserViewController;
 {
@@ -284,6 +226,7 @@ didReceiveInvitationFromPeer: (MCPeerID *)peerID
 	};
 	return NO;
 }
+
 -(void)success {
 	
 }
@@ -373,9 +316,11 @@ didReceiveInvitationFromPeer: (MCPeerID *)peerID
 //		}
 //	}
 
-	self.label_TekiTensu_1.text = string_1;
+	//self.label_TekiTensu_1.text = string_1;
 	
-	[self tamaDown];
+	[self.gameView setNeedsDisplay];
+	
+	//[self tamaDown];
 	
 }
 
@@ -491,15 +436,16 @@ withDiscoveryInfo: (NSDictionary *)info{
 	//self.label_TekiTensu_1.text = [NSString stringWithFormat: @"敵１    %@", string];
 	string_1 = [NSString stringWithFormat: @"敵１    %@", string];
 	
-	[self initBall];
+	
+	[self.gameView initBall];
 	
 //	NSLog( @"count = %d", [array_Ball count] );
 	
-	timer2 = [NSTimer scheduledTimerWithTimeInterval: 0.1
-											  target: self
-											selector: @selector( tamaDown )
-											userInfo: nil
-											 repeats: NO];
+//	timer2 = [NSTimer scheduledTimerWithTimeInterval: 0.1
+//											  target: self
+//											selector: @selector( tamaDown )
+//											userInfo: nil
+//											 repeats: NO];
 
 }
 
@@ -639,6 +585,16 @@ withDiscoveryInfo: (NSDictionary *)info{
 //{
 //	
 //}
+//
+
+- (IBAction)button_Ana_Action:(id)sender
+{
+
+	[self.gameView removeAllAna];
+	
+	[self.gameView initAna];
+	
+}
 
 - (IBAction)button_BallIn_Action:(id)sender
 {
@@ -646,7 +602,7 @@ withDiscoveryInfo: (NSDictionary *)info{
 	integer_MyTensu += 10;
 	
 	NSString *string = [NSString stringWithFormat: @"%06ld", integer_MyTensu];
-	self.label_MyTensu.text = [NSString stringWithFormat: @"自分    %@", string];
+	self.label_MyTensu.text = [NSString stringWithFormat: @"自分 %@", string];
 
 	NSError *error = nil;
 	
@@ -669,177 +625,177 @@ withDiscoveryInfo: (NSDictionary *)info{
 	}
 	
 }
-
-- (void)initAna
-{
-	
-	CGRect r = [[UIScreen mainScreen] applicationFrame];
-
-	for ( int i = 0; i < integer_AnaCount; i ++ ) {
-		
-		NSInteger x = ( arc4random() % (NSInteger)( r.size.width  - 100 ) + 50 );
-		NSInteger y = ( arc4random() % (NSInteger)( r.size.height - 100 ) + 50 );
-		
-		NSLog( @"%@", NSStringFromCGRect( r ));
-		NSLog( @"x = %ld, y = %ld", x , y );
-		
-		//	for ( NSDictionary *old_dic in array_Ana ) {
-		//
-		//
-		//	}
-		
-		NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-		
-		//UIImageView追加
-		UIImage* image = [UIImage imageNamed: @"blackhall.png"];
-		
-		UIImageView *imageView = [[UIImageView alloc] initWithImage: image];
-		
-		imageView.frame  = CGRectMake( x, y, 50, 50 );
-		
-		imageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin |UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
-		
-		[self.view addSubview: imageView];
-		
-		
-		[dic setObject: imageView forKey: @"image_view"];
-		
-		
-		[array_Ana addObject: dic];
-		
-	}
-	
-}
-
-- (void)removeAllAna
-{
-	
-	for ( NSDictionary *dic in array_Ana ) {
-	
-		UIImageView *imageView = [dic objectForKey: @"image_view"];
-		
-		[imageView removeFromSuperview];
-
-	}
-	
-	[array_Ana removeAllObjects];
-
-}
-
-- (void)initBall
-{
-	
-	NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-	
-	//UIImageView追加
-	UIImage* image = [UIImage imageNamed: @"ball.png"];
-	
-	UIImageView *imageView = [[UIImageView alloc] initWithImage: image];
-	
-	imageView.center = self.view.center;
-	
-	imageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin |UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
-	
-	[self.view addSubview:imageView];
-	
-	
-	float speed_x = 0.0, speed_y = 0.0;
-	NSNumber *number_x = [[NSNumber alloc] initWithFloat: speed_x];
-	NSNumber *number_y = [[NSNumber alloc] initWithFloat: speed_y];
-	
-	[dic setObject: imageView forKey: @"image_view"];
-	[dic setObject: number_x  forKey: @"speed_x"];
-	[dic setObject: number_y  forKey: @"speed_y"];
-	
-	
-	[array_Ball addObject: dic];
-	
-}
-
-- (void)tamaDown
-{
-	
-//	int index;
-//	
-//loop:
-//	
-//	index = 0;
-//	
-//	for ( NSMutableDictionary *dic in array_Ball ) {
-//		
-//		UIImageView *imageView = [dic objectForKey: @"image_view"];
-//		
-//		NSInteger ix = imageView.center.x;
-//		NSInteger iy = imageView.center.y;
-//		NSInteger ax = self.imageView_Ana.center.x;
-//		NSInteger ay = self.imageView_Ana.center.y;
-//		
-//		//NSLog( @"%ld > %ld && %ld < %ld && %ld > %ld && %ld < %ld", ix, ax - 20, ix, ax + 20, iy, ay - 20, iy, ay + 20 );
-//		
-//		if ( ix > ax - 20 && ix < ax + 20 &&
-//			iy > ay - 20 && iy < ay + 20     ) {
-//			
-//			imageView.hidden = YES;
-//			
-//			integer_MyTensu += 10;
-//			
-//			NSString *string = [NSString stringWithFormat: @"%06ld", integer_MyTensu];
-//			self.label_MyTensu.text = [NSString stringWithFormat: @"自分    %@", string];
-//			
-//			NSError *error = nil;
-//			
-//			//送信する文字列を作成
-//			//NSData へ文字列を変換
-//			NSData *data = [string dataUsingEncoding: NSUTF8StringEncoding];
-//			
-//			//送信先の Peer を指定する
-//			NSArray *peerIDs = self.session.connectedPeers;
-//			
-//			[self.session sendData: data
-//						   toPeers: peerIDs
-//						  withMode: MCSessionSendDataReliable
-//							 error: &error];
-//			
-//			if ( error ) {
-//				
-//				NSLog( @"%@", error );
-//				
-//			}
-//			
-//			[imageView removeFromSuperview];
-//			
-//			[array_Ball removeObjectAtIndex: index];
-//			
-//			timer_Kieru = [NSTimer scheduledTimerWithTimeInterval: 5.0
-//														   target: self
-//														 selector: @selector( tabaArawaru )
-//														 userInfo: nil
-//														  repeats: NO];
-//			
-//			goto loop;
-//			
-//		}
 //
-//		index ++;
+//- (void)initAna
+//{
+//	
+//	CGRect r = [[UIScreen mainScreen] applicationFrame];
+//
+//	for ( int i = 0; i < integer_AnaCount; i ++ ) {
+//		
+//		NSInteger x = ( arc4random() % (NSInteger)( r.size.width  - 100 ) + 50 );
+//		NSInteger y = ( arc4random() % (NSInteger)( r.size.height - 100 ) + 50 );
+//		
+//		NSLog( @"%@", NSStringFromCGRect( r ));
+//		NSLog( @"x = %ld, y = %ld", x , y );
+//		
+//		//	for ( NSDictionary *old_dic in array_Ana ) {
+//		//
+//		//
+//		//	}
+//		
+//		NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
+//		
+//		//UIImageView追加
+//		UIImage* image = [UIImage imageNamed: @"blackhall.png"];
+//		
+//		UIImageView *imageView = [[UIImageView alloc] initWithImage: image];
+//		
+//		imageView.frame  = CGRectMake( x, y, 50, 50 );
+//		
+//		imageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin |UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+//		
+//		[self.view addSubview: imageView];
+//		
+//		
+//		[dic setObject: imageView forKey: @"image_view"];
+//		
+//		
+//		[array_Ana addObject: dic];
 //		
 //	}
-	
-}
-
-- (void)tabaArawaru
-{
-
-	[self initBall];
-	
-}
-
-- (IBAction)button_Ana_Action: (id)sender
-{
-	
-	[self removeAllAna];
-	
-	[self initAna];
-	
-}
+//	
+//}
+//
+//- (void)removeAllAna
+//{
+//	
+//	for ( NSDictionary *dic in array_Ana ) {
+//	
+//		UIImageView *imageView = [dic objectForKey: @"image_view"];
+//		
+//		[imageView removeFromSuperview];
+//
+//	}
+//	
+//	[array_Ana removeAllObjects];
+//
+//}
+//
+//- (void)initBall
+//{
+//	
+//	NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
+//	
+//	//UIImageView追加
+//	UIImage* image = [UIImage imageNamed: @"ball.png"];
+//	
+//	UIImageView *imageView = [[UIImageView alloc] initWithImage: image];
+//	
+//	imageView.center = self.view.center;
+//	
+//	imageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin |UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+//	
+//	[self.view addSubview:imageView];
+//	
+//	
+//	float speed_x = 0.0, speed_y = 0.0;
+//	NSNumber *number_x = [[NSNumber alloc] initWithFloat: speed_x];
+//	NSNumber *number_y = [[NSNumber alloc] initWithFloat: speed_y];
+//	
+//	[dic setObject: imageView forKey: @"image_view"];
+//	[dic setObject: number_x  forKey: @"speed_x"];
+//	[dic setObject: number_y  forKey: @"speed_y"];
+//	
+//	
+//	[array_Ball addObject: dic];
+//	
+//}
+//
+//- (void)tamaDown
+//{
+//	
+////	int index;
+////	
+////loop:
+////	
+////	index = 0;
+////	
+////	for ( NSMutableDictionary *dic in array_Ball ) {
+////		
+////		UIImageView *imageView = [dic objectForKey: @"image_view"];
+////		
+////		NSInteger ix = imageView.center.x;
+////		NSInteger iy = imageView.center.y;
+////		NSInteger ax = self.imageView_Ana.center.x;
+////		NSInteger ay = self.imageView_Ana.center.y;
+////		
+////		//NSLog( @"%ld > %ld && %ld < %ld && %ld > %ld && %ld < %ld", ix, ax - 20, ix, ax + 20, iy, ay - 20, iy, ay + 20 );
+////		
+////		if ( ix > ax - 20 && ix < ax + 20 &&
+////			iy > ay - 20 && iy < ay + 20     ) {
+////			
+////			imageView.hidden = YES;
+////			
+////			integer_MyTensu += 10;
+////			
+////			NSString *string = [NSString stringWithFormat: @"%06ld", integer_MyTensu];
+////			self.label_MyTensu.text = [NSString stringWithFormat: @"自分    %@", string];
+////			
+////			NSError *error = nil;
+////			
+////			//送信する文字列を作成
+////			//NSData へ文字列を変換
+////			NSData *data = [string dataUsingEncoding: NSUTF8StringEncoding];
+////			
+////			//送信先の Peer を指定する
+////			NSArray *peerIDs = self.session.connectedPeers;
+////			
+////			[self.session sendData: data
+////						   toPeers: peerIDs
+////						  withMode: MCSessionSendDataReliable
+////							 error: &error];
+////			
+////			if ( error ) {
+////				
+////				NSLog( @"%@", error );
+////				
+////			}
+////			
+////			[imageView removeFromSuperview];
+////			
+////			[array_Ball removeObjectAtIndex: index];
+////			
+////			timer_Kieru = [NSTimer scheduledTimerWithTimeInterval: 5.0
+////														   target: self
+////														 selector: @selector( tabaArawaru )
+////														 userInfo: nil
+////														  repeats: NO];
+////			
+////			goto loop;
+////			
+////		}
+////
+////		index ++;
+////		
+////	}
+//	
+//}
+//
+//- (void)tabaArawaru
+//{
+//
+//	[self initBall];
+//	
+//}
+//
+//- (IBAction)button_Ana_Action: (id)sender
+//{
+//	
+//	[self removeAllAna];
+//	
+//	[self initAna];
+//	
+//}
 
 @end

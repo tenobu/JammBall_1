@@ -2,7 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -17,85 +16,98 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vUb-nR-aH1">
-                                <rect key="frame" x="536" y="28" width="48" height="30"/>
-                                <state key="normal" title="Search">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="connect:" destination="BYZ-38-t0r" eventType="touchUpInside" id="GZy-Vu-50g"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="自分    ００００００" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aj9-FJ-XGK">
-                                <rect key="frame" x="16" y="20" width="156" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="敵１    ００００００" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HeQ-c2-Urs">
-                                <rect key="frame" x="16" y="49" width="156" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="敵２    ００００００" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wtA-rN-ZKz">
-                                <rect key="frame" x="16" y="78" width="156" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="敵３    ００００００" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mcB-oh-iKP">
-                                <rect key="frame" x="16" y="107" width="156" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="敵４    ００００００" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L7i-bz-cZA">
-                                <rect key="frame" x="16" y="136" width="156" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bBh-kW-Yjc">
-                                <rect key="frame" x="278" y="550" width="43" height="30"/>
-                                <state key="normal" title="Ball In">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="button_BallIn_Action:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Fqp-NG-T3z"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nb7-lc-CE1">
-                                <rect key="frame" x="16" y="550" width="30" height="30"/>
-                                <state key="normal" title="Ana">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="button_Ana_Action:" destination="BYZ-38-t0r" eventType="touchUpInside" id="OlT-bD-uiP"/>
-                                </connections>
-                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yn6-99-hxx" customClass="GameView">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0TP-AI-PEC">
+                                        <rect key="frame" x="279" y="562" width="43" height="30"/>
+                                        <state key="normal" title="Ball In">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="button_BallIn_Action:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bm6-fV-qRw"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="敵４ 000000" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GnR-Ls-y8l">
+                                        <rect key="frame" x="24" y="152" width="96" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="敵３ 000000" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A7A-l1-ds3">
+                                        <rect key="frame" x="24" y="123" width="96" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="敵２ 000000" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WqB-VK-qvY">
+                                        <rect key="frame" x="24" y="94" width="96" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="敵１ 000000" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yzL-Il-kVB">
+                                        <rect key="frame" x="24" y="65" width="96" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="自分 000000" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W42-TK-TCw">
+                                        <rect key="frame" x="24" y="36" width="96" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8eG-P5-TfP">
+                                        <rect key="frame" x="8" y="570" width="30" height="30"/>
+                                        <state key="normal" title="Ana">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="button_Ana_Action:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Ukb-pL-bMC"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vUb-nR-aH1">
+                                        <rect key="frame" x="544" y="21" width="48" height="30"/>
+                                        <state key="normal" title="Search">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="connect:" destination="BYZ-38-t0r" eventType="touchUpInside" id="GZy-Vu-50g"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="8eG-P5-TfP" firstAttribute="leading" secondItem="Yn6-99-hxx" secondAttribute="leading" constant="8" id="00d-LC-0v1"/>
+                                    <constraint firstAttribute="centerX" secondItem="0TP-AI-PEC" secondAttribute="centerX" id="40y-wp-6aW"/>
+                                    <constraint firstAttribute="bottom" secondItem="8eG-P5-TfP" secondAttribute="bottom" id="53o-Wc-6zd"/>
+                                    <constraint firstAttribute="bottom" secondItem="0TP-AI-PEC" secondAttribute="bottom" constant="8" id="NEU-Bi-Hzb"/>
+                                    <constraint firstAttribute="trailing" secondItem="vUb-nR-aH1" secondAttribute="trailing" constant="8" id="ZP3-vR-xkZ"/>
+                                    <constraint firstItem="vUb-nR-aH1" firstAttribute="top" secondItem="Yn6-99-hxx" secondAttribute="top" constant="21" id="yJ1-mR-mFa"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="nb7-lc-CE1" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="FL1-AR-LUs"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="nb7-lc-CE1" secondAttribute="bottom" constant="20" id="LiS-1j-AeW"/>
-                            <constraint firstAttribute="centerX" secondItem="bBh-kW-Yjc" secondAttribute="centerX" id="PlM-Dn-c2f"/>
-                            <constraint firstItem="vUb-nR-aH1" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="Pla-Te-q19"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="bBh-kW-Yjc" secondAttribute="bottom" constant="20" id="gq9-oe-g88"/>
-                            <constraint firstItem="vUb-nR-aH1" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" id="nm4-pT-xLC"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Yn6-99-hxx" secondAttribute="bottom" id="4g1-xK-Coo"/>
+                            <constraint firstAttribute="trailing" secondItem="Yn6-99-hxx" secondAttribute="trailing" id="7nV-lA-Kyf"/>
+                            <constraint firstItem="Yn6-99-hxx" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="-20" id="BVm-5w-U3Y"/>
+                            <constraint firstItem="Yn6-99-hxx" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="jCz-9S-JqQ"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="label_MyTensu" destination="aj9-FJ-XGK" id="Eem-68-OxO"/>
-                        <outlet property="label_TekiTensu_1" destination="HeQ-c2-Urs" id="Gwr-MV-D0D"/>
-                        <outlet property="label_TekiTensu_2" destination="wtA-rN-ZKz" id="0ir-l1-tMz"/>
-                        <outlet property="label_TekiTensu_3" destination="mcB-oh-iKP" id="CbT-4Y-Rad"/>
-                        <outlet property="label_TekiTensu_4" destination="L7i-bz-cZA" id="rg2-ce-aPe"/>
+                        <outlet property="gameView" destination="Yn6-99-hxx" id="Q3x-iI-i8n"/>
+                        <outlet property="label_MyTensu" destination="W42-TK-TCw" id="q5d-hy-lR0"/>
+                        <outlet property="label_TekiTensu_1" destination="yzL-Il-kVB" id="m71-Oh-JCz"/>
+                        <outlet property="label_TekiTensu_2" destination="WqB-VK-qvY" id="wMz-2O-cp8"/>
+                        <outlet property="label_TekiTensu_3" destination="A7A-l1-ds3" id="9Eb-io-sio"/>
+                        <outlet property="label_TekiTensu_4" destination="GnR-Ls-y8l" id="iUZ-Zs-VTM"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="139" y="-13"/>
+            <point key="canvasLocation" x="162" y="13"/>
         </scene>
     </scenes>
 </document>
