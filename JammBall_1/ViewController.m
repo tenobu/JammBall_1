@@ -336,9 +336,7 @@ didReceiveInvitationFromPeer: (MCPeerID *)peerID
 
 	//self.label_TekiTensu_1.text = string_1;
 	
-	[self.gameView setNeedsDisplay];
-	
-	//[self tamaDown];
+	[self tamaDown];
 	
 }
 
@@ -969,18 +967,6 @@ withDiscoveryInfo: (NSDictionary *)info{
 	
 	
 	integer_BallCount ++;
-	
-}
-
-- (void)drawRect: (CGRect)rect
-{
-	
-	[self tamaDown];
-	
-	//	CGRect frame = self.frame;
-	//
-	//	CGContextRef context = UIGraphicsGetCurrentContext();  // コンテキストを取得
-	//	CGContextStrokeRect( context, frame );  // 四角形の描画
 	
 }
 
