@@ -115,7 +115,7 @@
 	
 	integer_MyTensu += 10;
 	
-	string = [NSString stringWithFormat: @"%06ld", integer_MyTensu];
+	string = [NSString stringWithFormat: @"%06d", integer_MyTensu];
 	self.label_MyTensu.text = [NSString stringWithFormat: @"自分 %@", string];
 	
 	NSError *error = nil;
@@ -499,6 +499,7 @@ withDiscoveryInfo: (NSDictionary *)info{
 	certificateHandler(YES);
 }
 
+
 #pragma mark - KVO
 // KVOの通知を受ける
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context;
@@ -513,6 +514,7 @@ withDiscoveryInfo: (NSDictionary *)info{
 		});
 	}
 }
+
 
 #pragma mark - NSStreamDelegate
 // ストリームの状態が変化した
@@ -602,179 +604,6 @@ withDiscoveryInfo: (NSDictionary *)info{
 //	
 //}
 //
-
-//
-//- (void)initAna
-//{
-//	
-//	CGRect r = [[UIScreen mainScreen] applicationFrame];
-//
-//	for ( int i = 0; i < integer_AnaCount; i ++ ) {
-//		
-//		NSInteger x = ( arc4random() % (NSInteger)( r.size.width  - 100 ) + 50 );
-//		NSInteger y = ( arc4random() % (NSInteger)( r.size.height - 100 ) + 50 );
-//		
-//		NSLog( @"%@", NSStringFromCGRect( r ));
-//		NSLog( @"x = %ld, y = %ld", x , y );
-//		
-//		//	for ( NSDictionary *old_dic in array_Ana ) {
-//		//
-//		//
-//		//	}
-//		
-//		NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-//		
-//		//UIImageView追加
-//		UIImage* image = [UIImage imageNamed: @"blackhall.png"];
-//		
-//		UIImageView *imageView = [[UIImageView alloc] initWithImage: image];
-//		
-//		imageView.frame  = CGRectMake( x, y, 50, 50 );
-//		
-//		imageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin |UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
-//		
-//		[self.view addSubview: imageView];
-//		
-//		
-//		[dic setObject: imageView forKey: @"image_view"];
-//		
-//		
-//		[array_Ana addObject: dic];
-//		
-//	}
-//	
-//}
-//
-//- (void)removeAllAna
-//{
-//	
-//	for ( NSDictionary *dic in array_Ana ) {
-//	
-//		UIImageView *imageView = [dic objectForKey: @"image_view"];
-//		
-//		[imageView removeFromSuperview];
-//
-//	}
-//	
-//	[array_Ana removeAllObjects];
-//
-//}
-//
-//- (void)initBall
-//{
-//	
-//	NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-//	
-//	//UIImageView追加
-//	UIImage* image = [UIImage imageNamed: @"ball.png"];
-//	
-//	UIImageView *imageView = [[UIImageView alloc] initWithImage: image];
-//	
-//	imageView.center = self.view.center;
-//	
-//	imageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin |UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
-//	
-//	[self.view addSubview:imageView];
-//	
-//	
-//	float speed_x = 0.0, speed_y = 0.0;
-//	NSNumber *number_x = [[NSNumber alloc] initWithFloat: speed_x];
-//	NSNumber *number_y = [[NSNumber alloc] initWithFloat: speed_y];
-//	
-//	[dic setObject: imageView forKey: @"image_view"];
-//	[dic setObject: number_x  forKey: @"speed_x"];
-//	[dic setObject: number_y  forKey: @"speed_y"];
-//	
-//	
-//	[array_Ball addObject: dic];
-//	
-//}
-//
-//- (void)tamaDown
-//{
-//	
-////	int index;
-////	
-////loop:
-////	
-////	index = 0;
-////	
-////	for ( NSMutableDictionary *dic in array_Ball ) {
-////		
-////		UIImageView *imageView = [dic objectForKey: @"image_view"];
-////		
-////		NSInteger ix = imageView.center.x;
-////		NSInteger iy = imageView.center.y;
-////		NSInteger ax = self.imageView_Ana.center.x;
-////		NSInteger ay = self.imageView_Ana.center.y;
-////		
-////		//NSLog( @"%ld > %ld && %ld < %ld && %ld > %ld && %ld < %ld", ix, ax - 20, ix, ax + 20, iy, ay - 20, iy, ay + 20 );
-////		
-////		if ( ix > ax - 20 && ix < ax + 20 &&
-////			iy > ay - 20 && iy < ay + 20     ) {
-////			
-////			imageView.hidden = YES;
-////			
-////			integer_MyTensu += 10;
-////			
-////			NSString *string = [NSString stringWithFormat: @"%06ld", integer_MyTensu];
-////			self.label_MyTensu.text = [NSString stringWithFormat: @"自分    %@", string];
-////			
-////			NSError *error = nil;
-////			
-////			//送信する文字列を作成
-////			//NSData へ文字列を変換
-////			NSData *data = [string dataUsingEncoding: NSUTF8StringEncoding];
-////			
-////			//送信先の Peer を指定する
-////			NSArray *peerIDs = self.session.connectedPeers;
-////			
-////			[self.session sendData: data
-////						   toPeers: peerIDs
-////						  withMode: MCSessionSendDataReliable
-////							 error: &error];
-////			
-////			if ( error ) {
-////				
-////				NSLog( @"%@", error );
-////				
-////			}
-////			
-////			[imageView removeFromSuperview];
-////			
-////			[array_Ball removeObjectAtIndex: index];
-////			
-////			timer_Kieru = [NSTimer scheduledTimerWithTimeInterval: 5.0
-////														   target: self
-////														 selector: @selector( tabaArawaru )
-////														 userInfo: nil
-////														  repeats: NO];
-////			
-////			goto loop;
-////			
-////		}
-////
-////		index ++;
-////		
-////	}
-//	
-//}
-//
-//- (void)tabaArawaru
-//{
-//
-//	[self initBall];
-//	
-//}
-//
-//- (IBAction)button_Ana_Action: (id)sender
-//{
-//	
-//	[self removeAllAna];
-//	
-//	[self initAna];
-//	
-//}
 
 - (void)initGame
 {
@@ -886,11 +715,11 @@ withDiscoveryInfo: (NSDictionary *)info{
 	
 	for ( int i = 0; i < integer_AnaCount; i ++ ) {
 		
-		NSInteger x = ( arc4random() % (NSInteger)( r.size.width  - 100 ) + 50 );
-		NSInteger y = ( arc4random() % (NSInteger)( r.size.height - 100 ) + 50 );
+		int x = ( arc4random() % (NSInteger)( r.size.width  - 100 ) + 50 );
+		int y = ( arc4random() % (NSInteger)( r.size.height - 100 ) + 50 );
 		
 		NSLog( @"%@", NSStringFromCGRect( r ));
-		NSLog( @"x = %ld, y = %ld", x , y );
+		NSLog( @"x = %d, y = %d", x , y );
 		
 		//	for ( NSDictionary *old_dic in array_Ana ) {
 		//
@@ -991,41 +820,19 @@ loop:
 			NSInteger ax = point_XY[j].x;
 			NSInteger ay = point_XY[j].y;
 			
-			NSLog( @"%ld > %ld && %ld < %ld && %ld > %ld && %ld < %ld", ix, ax - 20, ix, ax + 20, iy, ay - 20, iy, ay + 20 );
+//			NSLog( @"%ld > %ld && %ld < %ld && %ld > %ld && %ld < %ld", ix, ax - 20, ix, ax + 20, iy, ay - 20, iy, ay + 20 );
 			
 			if ( ix > ax - 20 && ix < ax + 20 &&
-				iy > ay - 20 && iy < ay + 20     ) {
+				 iy > ay - 20 && iy < ay + 20    ) {
 				
 				imageView.hidden = YES;
 				
-				//				integer_MyTensu += 10;
-				//
-				//				NSString *string = [NSString stringWithFormat: @"%06ld", integer_MyTensu];
-				//				self.label_MyTensu.text = [NSString stringWithFormat: @"自分    %@", string];
+				integer_MyTensu += 10;
 				
-				NSString *string = @"";
+				NSString *string = [NSString stringWithFormat: @"%06d", integer_MyTensu];
+				self.label_MyTensu.text = [NSString stringWithFormat: @"自分 %@", string];
 				
 				[self setSendData: string];
-				
-				//				NSError *error = nil;
-				//
-				//				//送信する文字列を作成
-				//				//NSData へ文字列を変換
-				//				NSData *data = [string dataUsingEncoding: NSUTF8StringEncoding];
-				//
-				//				//送信先の Peer を指定する
-				//				NSArray *peerIDs = self.session.connectedPeers;
-				//
-				//				[self.session sendData: data
-				//							   toPeers: peerIDs
-				//							  withMode: MCSessionSendDataReliable
-				//								 error: &error];
-				//
-				//				if ( error ) {
-				//
-				//					NSLog( @"%@", error );
-				//
-				//				}
 				
 				[imageView removeFromSuperview];
 				
@@ -1035,7 +842,7 @@ loop:
 				
 				if ( integer_BallCount == 0 ) {
 					
-					timer_Kieru = [NSTimer scheduledTimerWithTimeInterval: 5.0
+					timer_Kieru = [NSTimer scheduledTimerWithTimeInterval: 1.0
 																   target: self
 																 selector: @selector( tabaArawaru )
 																 userInfo: nil
@@ -1074,65 +881,13 @@ loop:
 - (IBAction)button_BallIn_Action: (id)sender
 {
 	
-	//	integer_MyTensu += 10;
-	//
-	//	NSString *string = [NSString stringWithFormat: @"%06ld", integer_MyTensu];
-	//	self.label_MyTensu.text = [NSString stringWithFormat: @"自分 %@", string];
+	integer_MyTensu += 10;
 	
-	//	NSError *error = nil;
-	//
-	//	//送信する文字列を作成
-	//	//NSData へ文字列を変換
-	//	NSData *data = [string dataUsingEncoding: NSUTF8StringEncoding];
-	//
-	//	//送信先の Peer を指定する
-	//	NSArray *peerIDs = self.session.connectedPeers;
-	//
-	//	[self.session sendData: data
-	//				   toPeers: peerIDs
-	//				  withMode: MCSessionSendDataReliable
-	//					 error: &error];
-	//
-	//	if ( error ) {
-	//		
-	//		NSLog( @"%@", error );
-	//		
-	//	}
-	
-	NSString *string = @"";
+	NSString *string = [NSString stringWithFormat: @"%06d", integer_MyTensu];
+	self.label_MyTensu.text = [NSString stringWithFormat: @"自分 %@", string];
 	
 	[self setSendData: string];
 	
 }
-
-//- (IBAction)button_BallIn_Action:(id)sender
-//{
-//	
-//	integer_MyTensu += 10;
-//	
-//	NSString *string = [NSString stringWithFormat: @"%06ld", integer_MyTensu];
-//	self.label_MyTensu.text = [NSString stringWithFormat: @"自分 %@", string];
-//	
-//	NSError *error = nil;
-//	
-//	//送信する文字列を作成
-//	//NSData へ文字列を変換
-//	NSData *data = [string dataUsingEncoding: NSUTF8StringEncoding];
-// 
-//	//送信先の Peer を指定する
-//	NSArray *peerIDs = self.session.connectedPeers;
-// 
-//	[self.session sendData: data
-//				   toPeers: peerIDs
-//				  withMode: MCSessionSendDataReliable
-//					 error: &error];
-//	
-//	if ( error ) {
-//		
-//		NSLog( @"%@", error );
-//		
-//	}
-//	
-//}
 
 @end
