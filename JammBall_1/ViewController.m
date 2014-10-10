@@ -38,6 +38,8 @@
 	
 	//ボールの複数管理
 	NSMutableArray *array_Ball;
+	//敵の管理
+	NSMutableArray *array_Teki;
 	
 	NSTimer *timer_Kieru;
 
@@ -53,9 +55,14 @@
 	[super viewDidLoad];
 
 	
-//	self.label_TekiTensu_2.hidden = YES;
-//	self.label_TekiTensu_3.hidden = YES;
-//	self.label_TekiTensu_4.hidden = YES;
+	self.label_Teki_1.text      = @"";
+	self.label_TekiTensu_1.text = @"";
+	self.label_Teki_2.text      = @"";
+	self.label_TekiTensu_2.text = @"";
+	self.label_Teki_3.text      = @"";
+	self.label_TekiTensu_3.text = @"";
+	self.label_Teki_4.text      = @"";
+	self.label_TekiTensu_4.text = @"";
 
 	
 	self.serviceType = SERVICE_TYPE;
@@ -113,10 +120,7 @@
 - (void)setSendData: (NSString *)string
 {
 	
-	integer_MyTensu += 10;
-	
-	string = [NSString stringWithFormat: @"%06d", integer_MyTensu];
-	self.label_MyTensu.text = [NSString stringWithFormat: @"自分 %@", string];
+	string = [NSString stringWithFormat: @"A0%@", string];
 	
 	NSError *error = nil;
 	
@@ -126,6 +130,16 @@
 	
 	//送信先の Peer を指定する
 	NSArray *peerIDs = self.session.connectedPeers;
+	if ( [peerIDs count] == 0 ) {
+		
+		self.textView_String.text = @"この端末は、誰にも繋がっていない！！";
+	
+		return;
+		
+	}
+	
+	self.textView_String.text = [peerIDs componentsJoinedByString: @", "];
+	
 	
 	[self.session sendData: data
 				   toPeers: peerIDs
@@ -139,6 +153,98 @@
 	}
 	
 }
+
+// dataを受け取った
+// サブスレッドで受けてる
+- (void)session: (MCSession *)session
+ didReceiveData: (NSData *)data
+	   fromPeer: (MCPeerID *)peerID
+{
+	
+	NSString *display_name = peerID.displayName;
+	
+	NSLog(@"-session: didReceiveData: fromPeer:%@", display_name);
+	
+ //   NSError *error;
+	
+	//	dic = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+	//
+	//	NSString *title = [dic objectForKey:@"title"];
+	//	NSString *note = [dic objectForKey:@"note"];
+	//
+	//	NSLog(@"タイトル %@ 本文　%@", title, note);
+	//	[self saveRiminder:title note:note];
+	
+	//    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&error];
+	//    if (!error) {
+	//        NSLog(@"data = %@", json);
+	//        [self.stepDelegate recvDictionary:json];
+	//    }
+	
+	NSString *string = [[NSString alloc] initWithData: data
+											 encoding: NSUTF8StringEncoding];
+	
+	NSString *command = [string substringToIndex: 1];
+	string = [string substringFromIndex: 1];
+	
+	//NSString *teki    = [string substringToIndex: 1];
+	string = [string substringFromIndex: 1];
+	
+	if ( [command isEqualToString: @"A"] ) {
+		
+		NSMutableDictionary *dic;
+		NSString *name;
+		BOOL flag = NO;
+		
+		for ( dic in array_Teki ) {
+			
+			name = [dic objectForKey: @"name"];
+		
+			if ( [name isEqualToString: display_name] ) {
+				
+				[dic setObject: string forKey: @"敵点数"];
+				
+				flag = YES;
+				
+				break;
+				
+			}
+			
+		}
+		
+		if ( flag == NO ) {
+			
+			dic = [[NSMutableDictionary alloc] init];
+			
+			[dic setObject: display_name forKey: @"name"];
+			[dic setObject: string       forKey: @"敵点数"];
+
+			[array_Teki addObject: dic];
+			
+		}
+		
+	}
+	
+	//self.label_TekiTensu_1.text = [NSString stringWithFormat: @"敵１    %@", string];
+	//string_1 = [NSString stringWithFormat: @"敵１    %@", string];
+	
+	
+	[self initBall];
+	
+	//	NSLog( @"count = %d", [array_Ball count] );
+	
+	//	timer2 = [NSTimer scheduledTimerWithTimeInterval: 0.1
+	//											  target: self
+	//											selector: @selector( tamaDown )
+	//											userInfo: nil
+	//											 repeats: NO];
+	
+}
+
+
+
+
+
 
 - (void)showAlert: (NSString *)title
 		  message: (NSString *)message
@@ -230,9 +336,11 @@ didReceiveInvitationFromPeer: (MCPeerID *)peerID
 //完了でviewをかくす
 -(void)browserViewControllerDidFinish:(MCBrowserViewController *)browserViewController;
 {
+
 	[self aprivate];
 	
 	[browserViewController dismissViewControllerAnimated:YES completion:NULL];
+
 }
 // デバイスの表示可否
 - (BOOL)browserViewController:(MCBrowserViewController *)browserViewController shouldPresentNearbyPeer:(MCPeerID *)peerID withDiscoveryInfo:(NSDictionary *)info;
@@ -252,89 +360,102 @@ didReceiveInvitationFromPeer: (MCPeerID *)peerID
 //perrIDを！！！！
 - (void)aprivate
 {
+
+	NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+
 	//送信先の Peer を指定する
 	//小さなデータをすべての接続先に送信する場合は、connectedPeers
 	//送信先を制限したい場合届けたい送信先のみで構成したNSArrayを指定する
 	//self.session = app.session;
-//	NSArray *peerIDs = self.session.connectedPeers;
-//	
-//	for (int count = 0; count < peerIDs.count; count++)
-//	{
-//		MCPeerID *peerID = [peerIDs objectAtIndex:count];
-//		switch (count)
-//		{
-//			case 0:
-//				_companion.text = peerID.displayName;
-//				
-//				if (i == 0)
-//				{
-//					self.hosi.hidden = YES;
-//					i = 1;
-//				}else
-//				{
-//					self.hosi.hidden = NO;
-//					i = 0;
-//				}
-//				break;
-//			case 1:
-//				_companion1.text = peerID.displayName;
-//				
-//				if (i == 0)
-//				{
-//					self.hosi1.hidden = YES;
-//					i = 1;
-//				}else
-//				{
-//					self.hosi1.hidden = NO;
-//					i = 0;
-//				}
-//				
-//				
-//				break;
-//			case 2:
-//				_companion2.text = peerID.displayName;
-//				if (i == 0)
-//				{
-//					self.hosi2.hidden = YES;
-//					i = 1;
-//				}else
-//				{
-//					self.hosi2.hidden = NO;
-//					i = 0;
-//				}
-//				
-//				break;
-//			case 3:
-//				_companion3.text = peerID.displayName;
-//				if (i == 0)
-//				{
-//					self.hosi3.hidden = YES;
-//					i = 1;
-//				}else
-//				{
-//					self.hosi3.hidden = NO;
-//					i = 0;
-//				}
-//				
-//				break;
-//			case 4:
-//				_companion4.text = peerID.displayName;
-//				if (i == 0)
-//				{
-//					self.hosi4.hidden = YES;
-//					i = 1;
-//				}else
-//				{
-//					self.hosi4.hidden = NO;
-//					i = 0;
-//				}
-//				
-//			default:
-//				break;
-//		}
-//	}
+	NSArray *peerIDs = self.session.connectedPeers;
+	
+	for ( int index = 0; index < peerIDs.count; index ++ ) {
 
-	//self.label_TekiTensu_1.text = string_1;
+		MCPeerID *peerID = [peerIDs objectAtIndex: index];
+		
+		NSString *display_name = peerID.displayName;
+		
+		int i = 0;
+		
+		for ( NSString *ds_name in array_Teki ) {
+			
+			if ( [ds_name isEqualToString: display_name] ) {
+				
+				switch ( i ) {
+						
+					case 0:
+						
+					{
+						
+						self.label_Teki_1.text = ds_name;
+						
+						NSMutableDictionary *dic = [ud objectForKey: display_name];
+						if ( dic == nil ) break;
+						
+						self.label_TekiTensu_1.text = [dic objectForKey: @"敵点数"];
+						
+					}
+						
+						break;
+						
+					case 1:
+						
+					{
+						
+						self.label_Teki_2.text = ds_name;
+						
+						NSMutableDictionary *dic = [ud objectForKey: display_name];
+						if ( dic == nil ) break;
+						
+						self.label_TekiTensu_2.text = [dic objectForKey: @"敵点数"];
+						
+					}
+						
+						break;
+						
+					case 2:
+						
+					{
+						
+						self.label_Teki_3.text = ds_name;
+						
+						NSMutableDictionary *dic = [ud objectForKey: display_name];
+						if ( dic == nil ) break;
+						
+						self.label_TekiTensu_3.text = [dic objectForKey: @"敵点数"];
+						
+					}
+						
+						break;
+						
+					case 3:
+						
+					{
+						
+						self.label_Teki_4.text = ds_name;
+						
+						NSMutableDictionary *dic = [ud objectForKey: display_name];
+						if ( dic == nil ) break;
+						
+						self.label_TekiTensu_4.text = [dic objectForKey: @"敵点数"];
+						
+					}
+						
+						break;
+						
+					default:
+						
+						break;
+				
+				}
+			
+			}
+			
+			i ++;
+			
+		}
+	
+	}
 	
 	[self tamaDown];
 	
@@ -418,51 +539,6 @@ withDiscoveryInfo: (NSDictionary *)info{
 		default:
 			break;
 	}
-}
-
-// dataを受け取った
-// サブスレッドで受けてる
-// 送信元： - (BOOL)sendData:(NSData *)data toPeers:(NSArray *)peerIDs withMode:(MCSessionSendDataMode)mode error:(NSError **)error;
-- (void)session: (MCSession *)session
- didReceiveData: (NSData *)data
-	   fromPeer: (MCPeerID *)peerID;
-{
-	
-	NSLog(@"-session: didReceiveData: fromPeer:%@", peerID.displayName);
-
- //   NSError *error;
-	
-	//	dic = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-	//
-	//	NSString *title = [dic objectForKey:@"title"];
-	//	NSString *note = [dic objectForKey:@"note"];
-	//
-	//	NSLog(@"タイトル %@ 本文　%@", title, note);
-	//	[self saveRiminder:title note:note];
-	
-	//    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&error];
-	//    if (!error) {
-	//        NSLog(@"data = %@", json);
-	//        [self.stepDelegate recvDictionary:json];
-	//    }
-	
-	NSString *string = [[NSString alloc] initWithData: data
-											 encoding: NSUTF8StringEncoding];
-	
-	//self.label_TekiTensu_1.text = [NSString stringWithFormat: @"敵１    %@", string];
-	string_1 = [NSString stringWithFormat: @"敵１    %@", string];
-	
-	
-	[self.gameView initBall];
-	
-//	NSLog( @"count = %d", [array_Ball count] );
-	
-//	timer2 = [NSTimer scheduledTimerWithTimeInterval: 0.1
-//											  target: self
-//											selector: @selector( tamaDown )
-//											userInfo: nil
-//											 repeats: NO];
-
 }
 
 // 相手からストリームデータを受けた
@@ -718,8 +794,8 @@ withDiscoveryInfo: (NSDictionary *)info{
 		int x = ( arc4random() % (NSInteger)( r.size.width  - 100 ) + 50 );
 		int y = ( arc4random() % (NSInteger)( r.size.height - 100 ) + 50 );
 		
-		NSLog( @"%@", NSStringFromCGRect( r ));
-		NSLog( @"x = %d, y = %d", x , y );
+//		NSLog( @"%@", NSStringFromCGRect( r ));
+//		NSLog( @"x = %d, y = %d", x , y );
 		
 		//	for ( NSDictionary *old_dic in array_Ana ) {
 		//
@@ -829,7 +905,7 @@ loop:
 				
 				integer_MyTensu += 10;
 				
-				NSString *string = [NSString stringWithFormat: @"%06d", integer_MyTensu];
+				NSString *string = [NSString stringWithFormat: @"%06d", (int)integer_MyTensu];
 				self.label_MyTensu.text = [NSString stringWithFormat: @"自分 %@", string];
 				
 				[self setSendData: string];
@@ -883,7 +959,7 @@ loop:
 	
 	integer_MyTensu += 10;
 	
-	NSString *string = [NSString stringWithFormat: @"%06d", integer_MyTensu];
+	NSString *string = [NSString stringWithFormat: @"%06d", (int)integer_MyTensu];
 	self.label_MyTensu.text = [NSString stringWithFormat: @"自分 %@", string];
 	
 	[self setSendData: string];

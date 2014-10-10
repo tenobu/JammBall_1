@@ -32,18 +32,23 @@
 //@property id stepDelegate;
 //@property (assign,nonatomic)id<UIPageViewControllerDelegate>delegate;
 
-@property (weak, nonatomic) IBOutlet GameView *gameView;
-
 - (IBAction)connect:(UIButton *)sender;
 //- (void)sendData:(NSString *)str;
 
 - (void)setSendData: (NSString *)string;
 
+@property (weak, nonatomic) IBOutlet UILabel *label_My;
 @property (weak, nonatomic) IBOutlet UILabel *label_MyTensu;
+@property (weak, nonatomic) IBOutlet UILabel *label_Teki_1;
 @property (weak, nonatomic) IBOutlet UILabel *label_TekiTensu_1;
+@property (weak, nonatomic) IBOutlet UILabel *label_Teki_2;
 @property (weak, nonatomic) IBOutlet UILabel *label_TekiTensu_2;
+@property (weak, nonatomic) IBOutlet UILabel *label_Teki_3;
 @property (weak, nonatomic) IBOutlet UILabel *label_TekiTensu_3;
+@property (weak, nonatomic) IBOutlet UILabel *label_Teki_4;
 @property (weak, nonatomic) IBOutlet UILabel *label_TekiTensu_4;
+
+@property (weak, nonatomic) IBOutlet UITextView *textView_String;
 
 - (void)initGame;
 - (void)initAna;
