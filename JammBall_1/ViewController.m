@@ -89,6 +89,9 @@
 	[self.assistant start];
 	
 
+	array_Teki = [[NSMutableArray alloc] init];
+	
+	
 	NSNotificationCenter*   nc = [NSNotificationCenter defaultCenter];
 	[nc addObserver: self
 		   selector: @selector( success )
@@ -227,7 +230,9 @@
 	
 	//self.label_TekiTensu_1.text = [NSString stringWithFormat: @"敵１    %@", string];
 	//string_1 = [NSString stringWithFormat: @"敵１    %@", string];
-	
+
+	[self aprivate];
+
 	
 	[self initBall];
 	
@@ -361,104 +366,58 @@ didReceiveInvitationFromPeer: (MCPeerID *)peerID
 - (void)aprivate
 {
 
-	NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-
 	//送信先の Peer を指定する
 	//小さなデータをすべての接続先に送信する場合は、connectedPeers
 	//送信先を制限したい場合届けたい送信先のみで構成したNSArrayを指定する
 	//self.session = app.session;
-	NSArray *peerIDs = self.session.connectedPeers;
+	//NSArray *peerIDs = self.session.connectedPeers;
 	
-	for ( int index = 0; index < peerIDs.count; index ++ ) {
+	int index = 0;
+	
+	for ( NSDictionary *dic in array_Teki ) {
 
-		MCPeerID *peerID = [peerIDs objectAtIndex: index];
+		NSString *name = [dic objectForKey: @"name"];
 		
-		NSString *display_name = peerID.displayName;
-		
-		int i = 0;
-		
-		for ( NSString *ds_name in array_Teki ) {
-			
-			if ( [ds_name isEqualToString: display_name] ) {
+		switch ( index ) {
 				
-				switch ( i ) {
-						
-					case 0:
-						
-					{
-						
-						self.label_Teki_1.text = ds_name;
-						
-						NSMutableDictionary *dic = [ud objectForKey: display_name];
-						if ( dic == nil ) break;
-						
-						self.label_TekiTensu_1.text = [dic objectForKey: @"敵点数"];
-						
-					}
-						
-						break;
-						
-					case 1:
-						
-					{
-						
-						self.label_Teki_2.text = ds_name;
-						
-						NSMutableDictionary *dic = [ud objectForKey: display_name];
-						if ( dic == nil ) break;
-						
-						self.label_TekiTensu_2.text = [dic objectForKey: @"敵点数"];
-						
-					}
-						
-						break;
-						
-					case 2:
-						
-					{
-						
-						self.label_Teki_3.text = ds_name;
-						
-						NSMutableDictionary *dic = [ud objectForKey: display_name];
-						if ( dic == nil ) break;
-						
-						self.label_TekiTensu_3.text = [dic objectForKey: @"敵点数"];
-						
-					}
-						
-						break;
-						
-					case 3:
-						
-					{
-						
-						self.label_Teki_4.text = ds_name;
-						
-						NSMutableDictionary *dic = [ud objectForKey: display_name];
-						if ( dic == nil ) break;
-						
-						self.label_TekiTensu_4.text = [dic objectForKey: @"敵点数"];
-						
-					}
-						
-						break;
-						
-					default:
-						
-						break;
+			case 0:
 				
-				}
-			
-			}
-			
-			i ++;
-			
+				self.label_Teki_1.text      = name;
+				self.label_TekiTensu_1.text = [dic objectForKey: @"敵点数"];
+				
+				break;
+				
+			case 1:
+				
+				self.label_Teki_2.text      = name;
+				self.label_TekiTensu_2.text = [dic objectForKey: @"敵点数"];
+				
+				break;
+				
+			case 2:
+				
+				self.label_Teki_3.text      = name;
+				self.label_TekiTensu_3.text = [dic objectForKey: @"敵点数"];
+
+				break;
+				
+			case 3:
+				
+				self.label_Teki_4.text      = name;
+				self.label_TekiTensu_4.text = [dic objectForKey: @"敵点数"];
+				
+				break;
+				
+			default:
+				
+				break;
+				
 		}
-	
+		
 	}
-	
+
 	[self tamaDown];
-	
+
 }
 
 //    NSMutableArray *labels = [[NSMutableArray alloc] init];
@@ -906,7 +865,10 @@ loop:
 				integer_MyTensu += 10;
 				
 				NSString *string = [NSString stringWithFormat: @"%06d", (int)integer_MyTensu];
-				self.label_MyTensu.text = [NSString stringWithFormat: @"自分 %@", string];
+				
+				self.label_MyTensu.text = string;
+				
+				string = [NSString stringWithFormat: @"A0%@", string];
 				
 				[self setSendData: string];
 				
@@ -960,7 +922,9 @@ loop:
 	integer_MyTensu += 10;
 	
 	NSString *string = [NSString stringWithFormat: @"%06d", (int)integer_MyTensu];
-	self.label_MyTensu.text = [NSString stringWithFormat: @"自分 %@", string];
+	self.label_MyTensu.text = string;
+	
+	string = [NSString stringWithFormat: @"A0%@", string];
 	
 	[self setSendData: string];
 	
