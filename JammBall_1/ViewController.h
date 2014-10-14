@@ -10,8 +10,6 @@
 
 #import "AppDelegate.h"
 
-#import "GameScene.h"
-
 @import MultipeerConnectivity;
 
 #define SERVICE_TYPE @"MCStepper"
@@ -31,8 +29,6 @@
 @property (strong, nonatomic) MCNearbyServiceBrowser *nearbyServiceBrowser;
 @property (strong, nonatomic) MCSession *session;
 
-@property (weak, nonatomic) IBOutlet GameScene *gameScene;
-
 //@property id stepDelegate;
 //@property (assign,nonatomic)id<UIPageViewControllerDelegate>delegate;
 
@@ -40,10 +36,5 @@
 //- (void)sendData:(NSString *)str;
 
 - (void)setSendData: (NSString *)string;
-
-- (void)initGame;
-- (void)initAna;
-- (void)removeAllAna;
-- (void)initBall;
 
 @end

@@ -10,6 +10,12 @@
 
 @interface GameScene : SKScene
 
-- (void)setText: (NSString *)string;
+- (void)startGame;
+
+- (void)  setText: (NSString *)string;
+
+- (void)setIndex: (NSInteger)index
+		    name: (NSString *)name
+		  tensuu: (NSString *)tensuu;
 
 @end

@@ -35,8 +35,6 @@
 	
 	//ボールの複数管理
 	NSMutableArray *array_Ball;
-	//敵の管理
-	NSMutableArray *array_Teki;
 	
 	NSTimer *timer_Kieru;
 
@@ -61,9 +59,10 @@
 
 - (void)didMoveToView: (SKView *)view
 {
-
+	
 	//		x = (295 : 728);
 	//		y = (  0 : 768);
+	
 	/* Setup your scene here */
 	label_MyLabel = [SKLabelNode labelNodeWithFontNamed: @"Chalkduster"];
 	
@@ -76,12 +75,14 @@
 	[self addChild: label_MyLabel];
 	
 	
+	NSInteger x1 = 320, y1 = 700;
+
 	label_My = [SKLabelNode labelNodeWithFontNamed: @"Arial Bold"];
 	
 	label_My.text = @"自分";
 	label_My.fontSize  = 20;
 	label_My.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeLeft;
-	label_My.position  = CGPointMake( 320, 730);
+	label_My.position  = CGPointMake( x1, y1);
 	label_My.zPosition = 10;
 	
 	[self addChild: label_My];
@@ -91,10 +92,13 @@
 	
 	label_MyTensu.text = @"000000";
 	label_MyTensu.fontSize = 20;
-	label_MyTensu.position = CGPointMake( 570, 730);
+	label_MyTensu.position = CGPointMake( x1 + 250, y1);
 	label_MyTensu.zPosition = 10;
 	
 	[self addChild: label_MyTensu];
+	
+	
+	y1 -= 30;
 	
 	
 	label_Teki_1 = [SKLabelNode labelNodeWithFontNamed: @"Arial Bold"];
@@ -102,7 +106,7 @@
 	label_Teki_1.text = @"";
 	label_Teki_1.fontSize = 20;
 	label_Teki_1.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeLeft;
-	label_Teki_1.position = CGPointMake( 320, 700);
+	label_Teki_1.position = CGPointMake( x1, y1 );
 	label_Teki_1.zPosition = 10;
 	
 	[self addChild: label_Teki_1];
@@ -112,10 +116,13 @@
 	
 	label_TekiTensu_1.text = @"000000";
 	label_TekiTensu_1.fontSize = 20;
-	label_TekiTensu_1.position = CGPointMake( 570, 700);
+	label_TekiTensu_1.position = CGPointMake( x1 + 250, y1);
 	label_TekiTensu_1.zPosition = 10;
 	
 	[self addChild: label_TekiTensu_1];
+	
+	
+	y1 -= 30;
 	
 	
 	label_Teki_2 = [SKLabelNode labelNodeWithFontNamed: @"Arial Bold"];
@@ -123,7 +130,7 @@
 	label_Teki_2.text = @"";
 	label_Teki_2.fontSize = 20;
 	label_Teki_2.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeLeft;
-	label_Teki_2.position = CGPointMake( 320, 670);
+	label_Teki_2.position = CGPointMake( x1, y1 );
 	label_Teki_2.zPosition = 10;
 	
 	[self addChild: label_Teki_2];
@@ -133,10 +140,13 @@
 	
 	label_TekiTensu_2.text = @"000000";
 	label_TekiTensu_2.fontSize = 20;
-	label_TekiTensu_2.position = CGPointMake( 570, 670);
+	label_TekiTensu_2.position = CGPointMake( x1 + 250, y1);
 	label_TekiTensu_2.zPosition = 10;
 	
 	[self addChild: label_TekiTensu_2];
+	
+	
+	y1 -= 30;
 	
 	
 	label_Teki_3 = [SKLabelNode labelNodeWithFontNamed: @"Arial Bold"];
@@ -144,7 +154,7 @@
 	label_Teki_3.text = @"";
 	label_Teki_3.fontSize = 20;
 	label_Teki_3.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeLeft;
-	label_Teki_3.position = CGPointMake( 320, 640);
+	label_Teki_3.position = CGPointMake( x1, y1 );
 	label_Teki_3.zPosition = 10;
 	
 	[self addChild: label_Teki_3];
@@ -154,10 +164,13 @@
 	
 	label_TekiTensu_3.text = @"000000";
 	label_TekiTensu_3.fontSize = 20;
-	label_TekiTensu_3.position = CGPointMake( 570, 640);
+	label_TekiTensu_3.position = CGPointMake( x1 + 250, y1);
 	label_TekiTensu_3.zPosition = 10;
 	
 	[self addChild: label_TekiTensu_3];
+	
+	
+	y1 -= 30;
 	
 	
 	label_Teki_4 = [SKLabelNode labelNodeWithFontNamed: @"Arial Bold"];
@@ -165,7 +178,7 @@
 	label_Teki_4.text = @"";
 	label_Teki_4.fontSize = 20;
 	label_Teki_4.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeLeft;
-	label_Teki_4.position = CGPointMake( 320, 610);
+	label_Teki_4.position = CGPointMake( x1, y1 );
 	label_Teki_4.zPosition = 10;
 	
 	[self addChild: label_Teki_4];
@@ -175,18 +188,12 @@
 	
 	label_TekiTensu_4.text = @"000000";
 	label_TekiTensu_4.fontSize = 20;
-	label_TekiTensu_4.position = CGPointMake( 570, 610);
+	label_TekiTensu_4.position = CGPointMake( x1 + 250, y1);
 	label_TekiTensu_4.zPosition = 10;
 	
 	[self addChild: label_TekiTensu_4];
 	
 	[self initGame];
-	
-	timer = [NSTimer scheduledTimerWithTimeInterval: 0.5
-											 target: self
-										   selector: @selector( aprivate )
-										   userInfo: nil
-											repeats: YES];
 	
 }
 
@@ -316,16 +323,6 @@
 		
 	}
 	
-	
-	integer_AnaCount = 3;
-	array_Ana  = [[NSMutableArray alloc] init];
-	
-	array_Ball = [[NSMutableArray alloc] init];
-	
-	[self initAna];
-	
-	[self initBall];
-	
 }
 
 - (void)initAna
@@ -416,6 +413,26 @@
 	
 }
 
+- (void)startGame
+{
+	
+	integer_AnaCount = 3;
+	array_Ana  = [[NSMutableArray alloc] init];
+	
+	array_Ball = [[NSMutableArray alloc] init];
+	
+	[self initAna];
+	
+	[self initBall];
+	
+	timer = [NSTimer scheduledTimerWithTimeInterval: 0.5
+											 target: self
+										   selector: @selector( aprivate )
+										   userInfo: nil
+											repeats: YES];
+	
+}
+
 - (void)aprivate
 {
 	
@@ -425,49 +442,49 @@
 	//self.session = app.session;
 	//NSArray *peerIDs = self.session.connectedPeers;
 	
-	int index = 0;
-	
-	for ( NSDictionary *dic in array_Teki ) {
-		
-		NSString *name = [dic objectForKey: @"name"];
-		
-		switch ( index ) {
-				
-			case 0:
-				
-				label_Teki_1.text      = name;
-				label_TekiTensu_1.text = [dic objectForKey: @"敵点数"];
-				
-				break;
-				
-			case 1:
-				
-				label_Teki_2.text      = name;
-				label_TekiTensu_2.text = [dic objectForKey: @"敵点数"];
-				
-				break;
-				
-			case 2:
-				
-				label_Teki_3.text      = name;
-				label_TekiTensu_3.text = [dic objectForKey: @"敵点数"];
-				
-				break;
-				
-			case 3:
-				
-				label_Teki_4.text      = name;
-				label_TekiTensu_4.text = [dic objectForKey: @"敵点数"];
-				
-				break;
-				
-			default:
-				
-				break;
-				
-		}
-		
-	}
+//	int index = 0;
+//	
+//	for ( NSDictionary *dic in array_Teki ) {
+//		
+//		NSString *name = [dic objectForKey: @"name"];
+//		
+//		switch ( index ) {
+//				
+//			case 0:
+//				
+//				label_Teki_1.text      = name;
+//				label_TekiTensu_1.text = [dic objectForKey: @"敵点数"];
+//				
+//				break;
+//				
+//			case 1:
+//				
+//				label_Teki_2.text      = name;
+//				label_TekiTensu_2.text = [dic objectForKey: @"敵点数"];
+//				
+//				break;
+//				
+//			case 2:
+//				
+//				label_Teki_3.text      = name;
+//				label_TekiTensu_3.text = [dic objectForKey: @"敵点数"];
+//				
+//				break;
+//				
+//			case 3:
+//				
+//				label_Teki_4.text      = name;
+//				label_TekiTensu_4.text = [dic objectForKey: @"敵点数"];
+//				
+//				break;
+//				
+//			default:
+//				
+//				break;
+//				
+//		}
+//		
+//	}
 	
 	[self tamaDown];
 	
@@ -510,7 +527,7 @@ loop:
 				
 				string = [NSString stringWithFormat: @"A0%@", string];
 				
-//				[self setSendData: string];
+				[self setSendData: string];
 				
 //				[imageView removeFromSuperview];
 				[ball removeFromParent];
@@ -565,6 +582,49 @@ loop:
 {
 	
 	label_MyLabel.text = @"";
+
+}
+
+- (void)setIndex: (NSInteger)index
+			name: (NSString *)name
+		  tensuu: (NSString *)tensuu
+{
+	
+	switch ( index ) {
+			
+		case 0:
+			
+			label_Teki_1.text      = name;
+			label_TekiTensu_1.text = tensuu;
+			
+			break;
+			
+		case 1:
+			
+			label_Teki_2.text      = name;
+			label_TekiTensu_2.text = tensuu;
+			
+			break;
+			
+		case 2:
+			
+			label_Teki_3.text      = name;
+			label_TekiTensu_3.text = tensuu;
+			
+			break;
+			
+		case 3:
+			
+			label_Teki_4.text      = name;
+			label_TekiTensu_4.text = tensuu;
+			
+			break;
+			
+		default:
+		
+			break;
+	
+	}
 
 }
 

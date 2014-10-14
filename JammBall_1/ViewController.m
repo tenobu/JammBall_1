@@ -50,29 +50,32 @@
 	
 	AppDelegate *app;
 
-	NSString *string_1;
+//	NSString *string_1;
 	
 	NSTimer *timer, *timer2;
 	
-	NSInteger integer_MyTensu;
-	
-	//加速度センサー
-	CMMotionManager *motionManager;
-	
-	NSInteger integer_BallCount;
-	
-	//穴の複数管理
-	NSInteger integer_AnaCount;
-	NSMutableArray *array_Ana;
-	CGPoint point_XY[10];
-	
-	//ボールの複数管理
-	NSMutableArray *array_Ball;
+//	NSInteger integer_MyTensu;
+//	
+//	//加速度センサー
+//	CMMotionManager *motionManager;
+//	
+//	NSInteger integer_BallCount;
+//	
+//	//穴の複数管理
+//	NSInteger integer_AnaCount;
+//	NSMutableArray *array_Ana;
+//	CGPoint point_XY[10];
+//	
+//	//ボールの複数管理
+//	NSMutableArray *array_Ball;
+
 	//敵の管理
 	NSMutableArray *array_Teki;
 	
-	NSTimer *timer_Kieru;
-
+//	NSTimer *timer_Kieru;
+	
+	GameScene *gameScene;
+	
 }
 
 @end
@@ -109,9 +112,6 @@
 	[self.assistant start];
 	
 
-	array_Teki = [[NSMutableArray alloc] init];
-	
-	
 	NSNotificationCenter*   nc = [NSNotificationCenter defaultCenter];
 	[nc addObserver: self
 		   selector: @selector( success )
@@ -119,18 +119,35 @@
 			 object: nil];
 	
 	
-	timer = [NSTimer scheduledTimerWithTimeInterval: 0.5
-											 target: self
-										   selector: @selector( aprivate )
-										   userInfo: nil
-											repeats: YES];
+	// 敵の位置の初期化
+	array_Teki = [[NSMutableArray alloc] init];
+	
+	
+//	timer = [NSTimer scheduledTimerWithTimeInterval: 0.5
+//											 target: self
+//										   selector: @selector( aprivate )
+//										   userInfo: nil
+//											repeats: YES];
 	
 	//背景色を白に指定
 	self.view.backgroundColor = [UIColor whiteColor];
 	
 	
-	[self initGame];
+	// Configure the view.
+	SKView *skView = (SKView *)self.view;
+	skView.showsFPS = YES;
+	skView.showsNodeCount = YES;
+	/* Sprite Kit applies additional optimizations to improve rendering performance */
+	skView.ignoresSiblingOrder = YES;
 	
+	// Create and configure the scene.
+	gameScene = [GameScene unarchiveFromFile: @"GameScene"];
+	
+	gameScene.scaleMode = SKSceneScaleModeAspectFill;
+	
+	// Present the scene.
+	[skView presentScene: gameScene];
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -155,14 +172,14 @@
 	if ( [peerIDs count] == 0 ) {
 		
 //		self.textView_String.text = @"この端末は、誰にも繋がっていない！！";
-		[self.gameScene setText: @"この端末は、誰にも繋がっていない！！"];
+		[gameScene setText: @"この端末は、誰にも繋がっていない！！"];
 	
 		return;
 		
 	}
 	
 //	self.textView_String.text = [peerIDs componentsJoinedByString: @", "];
-	[self.gameScene setText: [peerIDs componentsJoinedByString: @", "]];
+	[gameScene setText: [peerIDs componentsJoinedByString: @", "]];
 	
 	
 	[self.session sendData: data
@@ -211,7 +228,7 @@
 	NSString *command = [string substringToIndex: 1];
 	string = [string substringFromIndex: 1];
 	
-	//NSString *teki    = [string substringToIndex: 1];
+	NSString *teki    = [string substringToIndex: 1];
 	string = [string substringFromIndex: 1];
 	
 	if ( [command isEqualToString: @"A"] ) {
@@ -219,6 +236,8 @@
 		NSMutableDictionary *dic;
 		NSString *name;
 		BOOL flag = NO;
+		
+		NSInteger index = 0;
 		
 		for ( dic in array_Teki ) {
 			
@@ -228,11 +247,20 @@
 				
 				[dic setObject: string forKey: @"敵点数"];
 				
+				NSNumber *number = [dic objectForKey: @"index"];
+				NSInteger idx = number.integerValue;
+				
+				[gameScene setIndex: idx
+							   name: name
+							 tensuu: string];
+				
 				flag = YES;
 				
 				break;
 				
 			}
+			
+			index ++;
 			
 		}
 		
@@ -240,23 +268,29 @@
 			
 			dic = [[NSMutableDictionary alloc] init];
 			
+			NSNumber *number = [[NSNumber alloc] initWithInteger: index];
+			
+			[dic setObject: number       forKey: @"index"];
 			[dic setObject: display_name forKey: @"name"];
 			[dic setObject: string       forKey: @"敵点数"];
 
 			[array_Teki addObject: dic];
 			
+			[gameScene setIndex: index
+						   name: display_name
+						 tensuu: string];
+			
 		}
 		
-		
 	}
-	
-	//self.label_TekiTensu_1.text = [NSString stringWithFormat: @"敵１    %@", string];
-	//string_1 = [NSString stringWithFormat: @"敵１    %@", string];
-
-	[self aprivate];
-
-	
-	[self initBall];
+//
+//	//self.label_TekiTensu_1.text = [NSString stringWithFormat: @"敵１    %@", string];
+//	//string_1 = [NSString stringWithFormat: @"敵１    %@", string];
+//
+//	[self aprivate];
+//
+//	
+//	[self initBall];
 	
 	//	NSLog( @"count = %d", [array_Ball count] );
 	
@@ -368,9 +402,13 @@ didReceiveInvitationFromPeer: (MCPeerID *)peerID
 	
 	[browserViewController dismissViewControllerAnimated:YES completion:NULL];
 
-	self.gameScene.hidden = NO;
+//	self.gameScene.hidden = NO;
+	gameScene.hidden = NO;
+	
+	[gameScene startGame];
 	
 }
+
 // デバイスの表示可否
 - (BOOL)browserViewController:(MCBrowserViewController *)browserViewController shouldPresentNearbyPeer:(MCPeerID *)peerID withDiscoveryInfo:(NSDictionary *)info;
 {
