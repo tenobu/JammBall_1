@@ -9,7 +9,8 @@
 #import <UIKit/UIKit.h>
 
 #import "AppDelegate.h"
-#import "GameView.h"
+
+#import "GameScene.h"
 
 @import MultipeerConnectivity;
 
@@ -29,6 +30,9 @@
 @property (strong, nonatomic) MCNearbyServiceAdvertiser *nearbyServiceAdvertiser;
 @property (strong, nonatomic) MCNearbyServiceBrowser *nearbyServiceBrowser;
 @property (strong, nonatomic) MCSession *session;
+
+@property (weak, nonatomic) IBOutlet GameScene *gameScene;
+
 //@property id stepDelegate;
 //@property (assign,nonatomic)id<UIPageViewControllerDelegate>delegate;
 
@@ -36,19 +40,6 @@
 //- (void)sendData:(NSString *)str;
 
 - (void)setSendData: (NSString *)string;
-
-@property (weak, nonatomic) IBOutlet UILabel *label_My;
-@property (weak, nonatomic) IBOutlet UILabel *label_MyTensu;
-@property (weak, nonatomic) IBOutlet UILabel *label_Teki_1;
-@property (weak, nonatomic) IBOutlet UILabel *label_TekiTensu_1;
-@property (weak, nonatomic) IBOutlet UILabel *label_Teki_2;
-@property (weak, nonatomic) IBOutlet UILabel *label_TekiTensu_2;
-@property (weak, nonatomic) IBOutlet UILabel *label_Teki_3;
-@property (weak, nonatomic) IBOutlet UILabel *label_TekiTensu_3;
-@property (weak, nonatomic) IBOutlet UILabel *label_Teki_4;
-@property (weak, nonatomic) IBOutlet UILabel *label_TekiTensu_4;
-
-@property (weak, nonatomic) IBOutlet UITextView *textView_String;
 
 - (void)initGame;
 - (void)initAna;

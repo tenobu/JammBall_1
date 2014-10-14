@@ -9,9 +9,39 @@
 #import "ViewController.h"
 
 #import "AppDelegate.h"
+#import "GameScene.h"
 #import <EventKit/EventKit.h>
 #import <EventKitUI/EventKitUI.h>
 #import <CoreMotion/CoreMotion.h>
+
+@implementation SKScene (Unarchive)
+
++ (instancetype)unarchiveFromFile:(NSString *)file
+{
+
+	/* Retrieve scene file path from the application bundle */
+	NSString *nodePath = [[NSBundle mainBundle] pathForResource: file
+														 ofType: @"sks"];
+	
+	/* Unarchive the file to an SKScene object */
+	NSData *data = [NSData dataWithContentsOfFile: nodePath
+										  options: NSDataReadingMappedIfSafe
+											error: nil];
+	
+	NSKeyedUnarchiver *arch = [[NSKeyedUnarchiver alloc] initForReadingWithData: data];
+	
+	[arch setClass: self
+	  forClassName: @"SKScene"];
+	
+	SKScene *scene = [arch decodeObjectForKey: NSKeyedArchiveRootObjectKey];
+
+	[arch finishDecoding];
+	
+	return scene;
+
+}
+
+@end
 
 @interface ViewController ()
 {
@@ -53,18 +83,8 @@
 {
 	
 	[super viewDidLoad];
-
 	
-//	self.label_Teki_1.text      = @"";
-//	self.label_TekiTensu_1.text = @"";
-//	self.label_Teki_2.text      = @"";
-//	self.label_TekiTensu_2.text = @"";
-//	self.label_Teki_3.text      = @"";
-//	self.label_TekiTensu_3.text = @"";
-//	self.label_Teki_4.text      = @"";
-//	self.label_TekiTensu_4.text = @"";
 
-	
 	self.serviceType = SERVICE_TYPE;
 	
 	
@@ -108,6 +128,7 @@
 	//背景色を白に指定
 	self.view.backgroundColor = [UIColor whiteColor];
 	
+	
 	[self initGame];
 	
 }
@@ -133,13 +154,15 @@
 	NSArray *peerIDs = self.session.connectedPeers;
 	if ( [peerIDs count] == 0 ) {
 		
-		self.textView_String.text = @"この端末は、誰にも繋がっていない！！";
+//		self.textView_String.text = @"この端末は、誰にも繋がっていない！！";
+		[self.gameScene setText: @"この端末は、誰にも繋がっていない！！"];
 	
 		return;
 		
 	}
 	
-	self.textView_String.text = [peerIDs componentsJoinedByString: @", "];
+//	self.textView_String.text = [peerIDs componentsJoinedByString: @", "];
+	[self.gameScene setText: [peerIDs componentsJoinedByString: @", "]];
 	
 	
 	[self.session sendData: data
@@ -345,6 +368,8 @@ didReceiveInvitationFromPeer: (MCPeerID *)peerID
 	
 	[browserViewController dismissViewControllerAnimated:YES completion:NULL];
 
+	self.gameScene.hidden = NO;
+	
 }
 // デバイスの表示可否
 - (BOOL)browserViewController:(MCBrowserViewController *)browserViewController shouldPresentNearbyPeer:(MCPeerID *)peerID withDiscoveryInfo:(NSDictionary *)info;
@@ -371,51 +396,51 @@ didReceiveInvitationFromPeer: (MCPeerID *)peerID
 	//self.session = app.session;
 	//NSArray *peerIDs = self.session.connectedPeers;
 	
-	int index = 0;
-	
-	for ( NSDictionary *dic in array_Teki ) {
-
-		NSString *name = [dic objectForKey: @"name"];
-		
-		switch ( index ) {
-				
-			case 0:
-				
-				self.label_Teki_1.text      = name;
-				self.label_TekiTensu_1.text = [dic objectForKey: @"敵点数"];
-				
-				break;
-				
-			case 1:
-				
-				self.label_Teki_2.text      = name;
-				self.label_TekiTensu_2.text = [dic objectForKey: @"敵点数"];
-				
-				break;
-				
-			case 2:
-				
-				self.label_Teki_3.text      = name;
-				self.label_TekiTensu_3.text = [dic objectForKey: @"敵点数"];
-
-				break;
-				
-			case 3:
-				
-				self.label_Teki_4.text      = name;
-				self.label_TekiTensu_4.text = [dic objectForKey: @"敵点数"];
-				
-				break;
-				
-			default:
-				
-				break;
-				
-		}
-		
-	}
-
-	[self tamaDown];
+//	int index = 0;
+//	
+//	for ( NSDictionary *dic in array_Teki ) {
+//
+//		NSString *name = [dic objectForKey: @"name"];
+//		
+//		switch ( index ) {
+//				
+//			case 0:
+//				
+//				self.label_Teki_1.text      = name;
+//				self.label_TekiTensu_1.text = [dic objectForKey: @"敵点数"];
+//				
+//				break;
+//				
+//			case 1:
+//				
+//				self.label_Teki_2.text      = name;
+//				self.label_TekiTensu_2.text = [dic objectForKey: @"敵点数"];
+//				
+//				break;
+//				
+//			case 2:
+//				
+//				self.label_Teki_3.text      = name;
+//				self.label_TekiTensu_3.text = [dic objectForKey: @"敵点数"];
+//
+//				break;
+//				
+//			case 3:
+//				
+//				self.label_Teki_4.text      = name;
+//				self.label_TekiTensu_4.text = [dic objectForKey: @"敵点数"];
+//				
+//				break;
+//				
+//			default:
+//				
+//				break;
+//				
+//		}
+//		
+//	}
+//
+//	[self tamaDown];
 
 }
 
