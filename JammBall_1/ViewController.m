@@ -55,14 +55,14 @@
 	[super viewDidLoad];
 
 	
-	self.label_Teki_1.text      = @"";
-	self.label_TekiTensu_1.text = @"";
-	self.label_Teki_2.text      = @"";
-	self.label_TekiTensu_2.text = @"";
-	self.label_Teki_3.text      = @"";
-	self.label_TekiTensu_3.text = @"";
-	self.label_Teki_4.text      = @"";
-	self.label_TekiTensu_4.text = @"";
+//	self.label_Teki_1.text      = @"";
+//	self.label_TekiTensu_1.text = @"";
+//	self.label_Teki_2.text      = @"";
+//	self.label_TekiTensu_2.text = @"";
+//	self.label_Teki_3.text      = @"";
+//	self.label_TekiTensu_3.text = @"";
+//	self.label_Teki_4.text      = @"";
+//	self.label_TekiTensu_4.text = @"";
 
 	
 	self.serviceType = SERVICE_TYPE;
@@ -122,8 +122,6 @@
 
 - (void)setSendData: (NSString *)string
 {
-	
-	string = [NSString stringWithFormat: @"A0%@", string];
 	
 	NSError *error = nil;
 	
@@ -225,6 +223,7 @@
 			[array_Teki addObject: dic];
 			
 		}
+		
 		
 	}
 	
