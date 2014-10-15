@@ -279,7 +279,7 @@
 
 	if ( [mode isEqualToString: @"Game"] ) {
 		
-		NSLog( @"update" );
+//		NSLog( @"update" );
 		
 		[self tamaDown];
 		
