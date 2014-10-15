@@ -10,6 +10,7 @@
 		98043C6A19ECB92E00770EA7 /* GameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 98043C6819ECB92E00770EA7 /* GameScene.m */; };
 		98043C6B19ECB92E00770EA7 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 98043C6919ECB92E00770EA7 /* GameScene.sks */; };
 		98043C6D19ECB9D200770EA7 /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98043C6C19ECB9D200770EA7 /* SpriteKit.framework */; };
+		98C0940719ED2E0F0022F6F4 /* sudatikun.png in Resources */ = {isa = PBXBuildFile; fileRef = 98C0940619ED2E0F0022F6F4 /* sudatikun.png */; };
 		98CDD78A19DE332B00A83271 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 98CDD78919DE332B00A83271 /* main.m */; };
 		98CDD78D19DE332B00A83271 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 98CDD78C19DE332B00A83271 /* AppDelegate.m */; };
 		98CDD79019DE332B00A83271 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98CDD78F19DE332B00A83271 /* ViewController.m */; };
@@ -37,6 +38,7 @@
 		98043C6819ECB92E00770EA7 /* GameScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameScene.m; sourceTree = "<group>"; };
 		98043C6919ECB92E00770EA7 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
 		98043C6C19ECB9D200770EA7 /* SpriteKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpriteKit.framework; path = System/Library/Frameworks/SpriteKit.framework; sourceTree = SDKROOT; };
+		98C0940619ED2E0F0022F6F4 /* sudatikun.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sudatikun.png; sourceTree = "<group>"; };
 		98CDD78419DE332B00A83271 /* JammBall_1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JammBall_1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		98CDD78819DE332B00A83271 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		98CDD78919DE332B00A83271 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -143,6 +145,7 @@
 		98CDD7DF19DE33CF00A83271 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				98C0940619ED2E0F0022F6F4 /* sudatikun.png */,
 				98CDD7E019DE33CF00A83271 /* ball.png */,
 				98CDD7E119DE33CF00A83271 /* blackhall.png */,
 			);
@@ -240,6 +243,7 @@
 				98CDD7E219DE33CF00A83271 /* ball.png in Resources */,
 				98043C6B19ECB92E00770EA7 /* GameScene.sks in Resources */,
 				98CDD79519DE332B00A83271 /* Images.xcassets in Resources */,
+				98C0940719ED2E0F0022F6F4 /* sudatikun.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

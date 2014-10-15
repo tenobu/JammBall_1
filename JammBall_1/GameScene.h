@@ -12,10 +12,12 @@
 
 - (void)startGame;
 
-- (void)  setText: (NSString *)string;
+- (void)  setTextLevel: (NSString *)string;
+- (void)  setTextLabel: (NSString *)string;
 
 - (void)setIndex: (NSInteger)index
 		    name: (NSString *)name
+			 tag: (NSString *)tag
 		  tensuu: (NSString *)tensuu;
 
 @end

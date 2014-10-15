@@ -54,25 +54,8 @@
 	
 	NSTimer *timer, *timer2;
 	
-//	NSInteger integer_MyTensu;
-//	
-//	//加速度センサー
-//	CMMotionManager *motionManager;
-//	
-//	NSInteger integer_BallCount;
-//	
-//	//穴の複数管理
-//	NSInteger integer_AnaCount;
-//	NSMutableArray *array_Ana;
-//	CGPoint point_XY[10];
-//	
-//	//ボールの複数管理
-//	NSMutableArray *array_Ball;
-
 	//敵の管理
 	NSMutableArray *array_Teki;
-	
-//	NSTimer *timer_Kieru;
 	
 	GameScene *gameScene;
 	
@@ -98,7 +81,7 @@
 							  encryptionPreference: MCEncryptionOptional];
 	
 	self.session.delegate = self;
-
+	
 	
 	NSMutableDictionary *info = [NSMutableDictionary dictionaryWithCapacity: 10];
 
@@ -113,6 +96,7 @@
 	
 
 	NSNotificationCenter*   nc = [NSNotificationCenter defaultCenter];
+	
 	[nc addObserver: self
 		   selector: @selector( success )
 			   name: @"tuuti"
@@ -122,12 +106,6 @@
 	// 敵の位置の初期化
 	array_Teki = [[NSMutableArray alloc] init];
 	
-	
-//	timer = [NSTimer scheduledTimerWithTimeInterval: 0.5
-//											 target: self
-//										   selector: @selector( aprivate )
-//										   userInfo: nil
-//											repeats: YES];
 	
 	//背景色を白に指定
 	self.view.backgroundColor = [UIColor whiteColor];
@@ -157,7 +135,7 @@
 	// Dispose of any resources that can be recreated.
 
 }
-
+	 
 - (void)setSendData: (NSString *)string
 {
 	
@@ -170,31 +148,31 @@
 	//送信先の Peer を指定する
 	NSArray *peerIDs = self.session.connectedPeers;
 	if ( [peerIDs count] == 0 ) {
-		
+			 
 //		self.textView_String.text = @"この端末は、誰にも繋がっていない！！";
-		[gameScene setText: @"この端末は、誰にも繋がっていない！！"];
-	
+		[gameScene setTextLabel: @"この端末は、誰にも繋がっていない！！"];
+			 
 		return;
 		
 	}
-	
-//	self.textView_String.text = [peerIDs componentsJoinedByString: @", "];
-	[gameScene setText: [peerIDs componentsJoinedByString: @", "]];
-	
-	
+		 
+	//	self.textView_String.text = [peerIDs componentsJoinedByString: @", "];
+	[gameScene setTextLabel: [peerIDs componentsJoinedByString: @", "]];
+		 
+		 
 	[self.session sendData: data
 				   toPeers: peerIDs
 				  withMode: MCSessionSendDataReliable
 					 error: &error];
 	
 	if ( error ) {
-		
+			 
 		NSLog( @"%@", error );
-		
+			 
 	}
-	
+		 
 }
-
+	 
 // dataを受け取った
 // サブスレッドで受けてる
 - (void)session: (MCSession *)session
@@ -203,11 +181,11 @@
 {
 	
 	NSString *display_name = peerID.displayName;
-	
+		 
 	NSLog(@"-session: didReceiveData: fromPeer:%@", display_name);
-	
- //   NSError *error;
-	
+		 
+	//   NSError *error;
+		 
 	//	dic = [NSKeyedUnarchiver unarchiveObjectWithData:data];
 	//
 	//	NSString *title = [dic objectForKey:@"title"];
@@ -221,89 +199,85 @@
 	//        NSLog(@"data = %@", json);
 	//        [self.stepDelegate recvDictionary:json];
 	//    }
-	
+		 
 	NSString *string = [[NSString alloc] initWithData: data
 											 encoding: NSUTF8StringEncoding];
 	
 	NSString *command = [string substringToIndex: 1];
 	string = [string substringFromIndex: 1];
-	
+		 
 	NSString *teki    = [string substringToIndex: 1];
 	string = [string substringFromIndex: 1];
+		 
+	NSMutableDictionary *dic;
+	NSString *name;
+	BOOL flag = NO;
 	
-	if ( [command isEqualToString: @"A"] ) {
+	NSInteger index = 0;
+	
+	for ( dic in array_Teki ) {
 		
-		NSMutableDictionary *dic;
-		NSString *name;
-		BOOL flag = NO;
+		name = [dic objectForKey: @"name"];
 		
-		NSInteger index = 0;
-		
-		for ( dic in array_Teki ) {
+		if ( [name isEqualToString: display_name] ) {
 			
-			name = [dic objectForKey: @"name"];
-		
-			if ( [name isEqualToString: display_name] ) {
-				
-				[dic setObject: string forKey: @"敵点数"];
-				
-				NSNumber *number = [dic objectForKey: @"index"];
-				NSInteger idx = number.integerValue;
-				
-				[gameScene setIndex: idx
-							   name: name
-							 tensuu: string];
-				
-				flag = YES;
-				
-				break;
-				
-			}
+			[dic setObject: string forKey: @"敵点数"];
 			
-			index ++;
+			NSNumber *number = [dic objectForKey: @"index"];
+			NSInteger idx = number.integerValue;
 			
-		}
-		
-		if ( flag == NO ) {
-			
-			dic = [[NSMutableDictionary alloc] init];
-			
-			NSNumber *number = [[NSNumber alloc] initWithInteger: index];
-			
-			[dic setObject: number       forKey: @"index"];
-			[dic setObject: display_name forKey: @"name"];
-			[dic setObject: string       forKey: @"敵点数"];
-
-			[array_Teki addObject: dic];
-			
-			[gameScene setIndex: index
-						   name: display_name
+			[gameScene setIndex: idx
+						   name: name
+							tag: command
 						 tensuu: string];
 			
+			flag = YES;
+			
+			break;
+			
 		}
 		
+		index ++;
+		
 	}
-//
-//	//self.label_TekiTensu_1.text = [NSString stringWithFormat: @"敵１    %@", string];
-//	//string_1 = [NSString stringWithFormat: @"敵１    %@", string];
-//
-//	[self aprivate];
-//
-//	
-//	[self initBall];
 	
+	if ( flag == NO ) {
+		
+		dic = [[NSMutableDictionary alloc] init];
+		
+		NSNumber *number = [[NSNumber alloc] initWithInteger: index];
+		
+		[dic setObject: number       forKey: @"index"];
+		[dic setObject: display_name forKey: @"name"];
+		[dic setObject: string       forKey: @"敵点数"];
+		
+		[array_Teki addObject: dic];
+		
+		[gameScene setIndex: index
+					   name: display_name
+						tag: command
+					 tensuu: string];
+		
+	}
+	
+	//
+	//	//self.label_TekiTensu_1.text = [NSString stringWithFormat: @"敵１    %@", string];
+	//	//string_1 = [NSString stringWithFormat: @"敵１    %@", string];
+	//
+	//	[self aprivate];
+	//
+	//
+	//	[self initBall];
+		 
 	//	NSLog( @"count = %d", [array_Ball count] );
-	
+		 
 	//	timer2 = [NSTimer scheduledTimerWithTimeInterval: 0.1
 	//											  target: self
 	//											selector: @selector( tamaDown )
 	//											userInfo: nil
 	//											 repeats: NO];
-	
+		 
 }
-
-
-
 
 
 
@@ -375,11 +349,13 @@ didReceiveInvitationFromPeer: (MCPeerID *)peerID
 	
 	MCBrowserViewController *_browserViewController = [[MCBrowserViewController alloc] initWithServiceType: self.serviceType session: self.session];
 	
-	_browserViewController.delegate = self;
-	_browserViewController.minimumNumberOfPeers = kMCSessionMinimumNumberOfPeers;
+	_browserViewController.delegate             = self;
+	_browserViewController.minimumNumberOfPeers = 3;
 	_browserViewController.maximumNumberOfPeers = kMCSessionMaximumNumberOfPeers;
 	
-	[self presentViewController:_browserViewController animated:YES completion:NULL];
+	[self presentViewController: _browserViewController
+					   animated: YES
+					 completion: NULL];
 	
 	
 	//    NSLog(@"kokohatottayo-------------------");

@@ -9,6 +9,7 @@
 #import "GameScene.h"
 
 #import <CoreMotion/CoreMotion.h>
+#import "ViewController.h"
 
 @interface GameScene ()
 {
@@ -29,16 +30,19 @@
 	NSInteger integer_BallCount;
 	
 	//穴の複数管理
-	NSInteger integer_AnaCount;
+	NSInteger integer_AnaCount, integer_LevelCount, integer_PlayCount;
+	NSDate *date_Play;
+	
 	NSMutableArray *array_Ana;
 	CGPoint point_XY[10];
 	
 	//ボールの複数管理
 	NSMutableArray *array_Ball;
 	
-	NSTimer *timer_Kieru;
+	NSTimer *timer_Kieru, *timer_LevelClear, *timer_LabelClear;
 
-	SKLabelNode *label_MyLabel;
+	SKLabelNode *label_MyLevel;
+	SKLabelNode *label_Label;
 	
 	SKLabelNode *label_My;
 	SKLabelNode *label_MyTensu;
@@ -64,15 +68,26 @@
 	//		y = (  0 : 768);
 	
 	/* Setup your scene here */
-	label_MyLabel = [SKLabelNode labelNodeWithFontNamed: @"Chalkduster"];
+	label_MyLevel = [SKLabelNode labelNodeWithFontNamed: @"Arial Bold"];
 	
-	label_MyLabel.text      = @"";
-	label_MyLabel.fontSize  = 65;
-	label_MyLabel.position  = CGPointMake( CGRectGetMidX( self.frame ),
+	label_MyLevel.text      = @"";
+	label_MyLevel.fontSize  = 50;
+	label_MyLevel.position  = CGPointMake( CGRectGetMidX( self.frame ),
 										   CGRectGetMidY( self.frame ));
-	label_MyLabel.zPosition = 10;
+	label_MyLevel.zPosition = 10;
 	
-	[self addChild: label_MyLabel];
+	[self addChild: label_MyLevel];
+	
+	
+	label_Label = [SKLabelNode labelNodeWithFontNamed: @"Arial Bold"];
+	
+	label_Label.text      = @"";
+	label_Label.fontSize  = 20;
+	label_Label.position  = CGPointMake( CGRectGetMidX( self.frame ),
+										 CGRectGetMidY( self.frame ) + 50 );
+	label_Label.zPosition = 10;
+	
+	[self addChild: label_Label];
 	
 	
 	NSInteger x1 = 320, y1 = 700;
@@ -192,6 +207,12 @@
 	label_TekiTensu_4.zPosition = 10;
 	
 	[self addChild: label_TekiTensu_4];
+	
+	
+	integer_LevelCount = 1;
+	integer_AnaCount   = 3;
+	integer_PlayCount  = 60;
+	
 	
 	[self initGame];
 	
@@ -385,12 +406,13 @@
 
 	CGPoint location = CGPointMake( ( 728 - 295 ) / 2 + 295 , 768 / 2 ); //self.view.center;//CGPointMake( x, y );
 	
-	SKSpriteNode *ball = [SKSpriteNode spriteNodeWithImageNamed: @"Ball"];
+//	SKSpriteNode *ball = [SKSpriteNode spriteNodeWithImageNamed: @"Ball"];
+	SKSpriteNode *ball = [SKSpriteNode spriteNodeWithImageNamed: @"Sudachi"];
 	
 	//		x = (295 : 728);
 	//		y = (  0 : 768);
-	ball.xScale    = 1.5;
-	ball.yScale    = 1.5;
+	ball.xScale    = 0.05;//1.5;
+	ball.yScale    = 0.05;//1.5;
 	ball.position  = location;
 	ball.zPosition = 1;
 	
@@ -413,80 +435,97 @@
 	
 }
 
+- (void)removeAllBall
+{
+	
+	for ( NSDictionary *dic in array_Ball ) {
+		
+		SKSpriteNode *ball = [dic objectForKey: @"SKSpriteNode"];
+		
+		[ball removeFromParent];
+		
+	}
+	
+	[array_Ball removeAllObjects];
+	
+	integer_BallCount = 0;
+	
+}
+
 - (void)startGame
 {
 	
-	integer_AnaCount = 3;
+	[self removeAllAna];
+
+	[self setTextLevel: [NSString stringWithFormat: @"LEVEL %d", (int)integer_LevelCount]];
+	
+	
 	array_Ana  = [[NSMutableArray alloc] init];
 	
 	array_Ball = [[NSMutableArray alloc] init];
+	
 	
 	[self initAna];
 	
 	[self initBall];
 	
+	
+	date_Play = [NSDate date];
+	
+	
 	timer = [NSTimer scheduledTimerWithTimeInterval: 0.5
 											 target: self
-										   selector: @selector( aprivate )
+										   selector: @selector( timer_Action )
 										   userInfo: nil
 											repeats: YES];
+
+	timer2 = [NSTimer scheduledTimerWithTimeInterval: 10.0
+											  target: self
+											selector: @selector( timer_2_Action )
+											userInfo: nil
+											 repeats: YES];
+
+	
+	[self timer_2_Action];
 	
 }
 
-- (void)aprivate
+
+
+
+
+- (void)timer_Action
 {
 	
-	//送信先の Peer を指定する
-	//小さなデータをすべての接続先に送信する場合は、connectedPeers
-	//送信先を制限したい場合届けたい送信先のみで構成したNSArrayを指定する
-	//self.session = app.session;
-	//NSArray *peerIDs = self.session.connectedPeers;
+	NSDate *date_now = [NSDate date];
 	
-//	int index = 0;
-//	
-//	for ( NSDictionary *dic in array_Teki ) {
-//		
-//		NSString *name = [dic objectForKey: @"name"];
-//		
-//		switch ( index ) {
-//				
-//			case 0:
-//				
-//				label_Teki_1.text      = name;
-//				label_TekiTensu_1.text = [dic objectForKey: @"敵点数"];
-//				
-//				break;
-//				
-//			case 1:
-//				
-//				label_Teki_2.text      = name;
-//				label_TekiTensu_2.text = [dic objectForKey: @"敵点数"];
-//				
-//				break;
-//				
-//			case 2:
-//				
-//				label_Teki_3.text      = name;
-//				label_TekiTensu_3.text = [dic objectForKey: @"敵点数"];
-//				
-//				break;
-//				
-//			case 3:
-//				
-//				label_Teki_4.text      = name;
-//				label_TekiTensu_4.text = [dic objectForKey: @"敵点数"];
-//				
-//				break;
-//				
-//			default:
-//				
-//				break;
-//				
-//		}
-//		
-//	}
+	if ( [date_now timeIntervalSinceDate: date_Play] > integer_PlayCount ) {
+		
+		[timer invalidate];
+		
+		[self gameEnd];
+		
+		return;
+		
+	}
 	
 	[self tamaDown];
+	
+}
+
+- (void)timer_2_Action
+{
+	
+	NSString *string = [NSString stringWithFormat: @"%06d", (int)integer_MyTensu];
+	
+	label_MyTensu.text = string;
+	
+	string = [NSString stringWithFormat: @"F0%@", string];
+	
+	UIView *view = (UIView *)self.view;
+	ViewController *viewCont = (ViewController *)view.window.rootViewController;
+	
+	[viewCont setSendData: string];
 	
 }
 
@@ -512,12 +551,8 @@ loop:
 			NSInteger ax = point_XY[j].x;
 			NSInteger ay = point_XY[j].y;
 			
-			//			NSLog( @"%ld > %ld && %ld < %ld && %ld > %ld && %ld < %ld", ix, ax - 20, ix, ax + 20, iy, ay - 20, iy, ay + 20 );
-			
 			if ( ix > ax - 20 && ix < ax + 20 &&
-				iy > ay - 20 && iy < ay + 20    ) {
-				
-//				imageView.hidden = YES;
+				 iy > ay - 20 && iy < ay + 20    ) {
 				
 				integer_MyTensu += 10;
 				
@@ -527,9 +562,11 @@ loop:
 				
 				string = [NSString stringWithFormat: @"A0%@", string];
 				
-				[self setSendData: string];
+				UIView *view = (UIView *)self.view;
+				ViewController *viewCont = (ViewController *)view.window.rootViewController;
 				
-//				[imageView removeFromSuperview];
+				[viewCont setSendData: string];
+				
 				[ball removeFromParent];
 				
 				[array_Ball removeObjectAtIndex: index];
@@ -565,67 +602,143 @@ loop:
 	
 }
 
-- (void)setText: (NSString *)string
+- (void)setTextLevel: (NSString *)string
 {
-
-	label_MyLabel.text = string;
 	
-	timer2 = [NSTimer scheduledTimerWithTimeInterval: 5
-											  target: self
-											selector: @selector( setTextClear )
-											userInfo: nil
-											 repeats: NO];
+	label_MyLevel.text = string;
+	
+	NSLog( @"my level = %@", string );
+	
+	timer_LevelClear = [NSTimer scheduledTimerWithTimeInterval: 10.0
+														target: self
+													  selector: @selector( setTextLevelClear )
+													  userInfo: nil
+													   repeats: NO];
 	
 }
 
-- (void)setTextClear
+- (void)setTextLevelClear
 {
 	
-	label_MyLabel.text = @"";
+	label_MyLevel.text = @"";
+	
+}
 
+- (void)setTextLabel: (NSString *)string
+{
+	
+	label_Label.text = string;
+	
+	NSLog( @"label = %@", string );
+	
+	timer_LabelClear = [NSTimer scheduledTimerWithTimeInterval: 10
+														target: self
+													  selector: @selector( setTextLabelClear )
+													  userInfo: nil
+													   repeats: NO];
+	
+}
+
+- (void)setTextLabelClear
+{
+	
+	label_Label.text = @"";
+	
 }
 
 - (void)setIndex: (NSInteger)index
 			name: (NSString *)name
+			 tag: (NSString *)tag
 		  tensuu: (NSString *)tensuu
 {
 	
-	switch ( index ) {
-			
-		case 0:
-			
-			label_Teki_1.text      = name;
-			label_TekiTensu_1.text = tensuu;
-			
-			break;
-			
-		case 1:
-			
-			label_Teki_2.text      = name;
-			label_TekiTensu_2.text = tensuu;
-			
-			break;
-			
-		case 2:
-			
-			label_Teki_3.text      = name;
-			label_TekiTensu_3.text = tensuu;
-			
-			break;
-			
-		case 3:
-			
-			label_Teki_4.text      = name;
-			label_TekiTensu_4.text = tensuu;
-			
-			break;
-			
-		default:
+	if ( [tag isEqualToString: @"F"] ) {
 		
-			break;
-	
-	}
+		switch ( index ) {
+				
+			case 0:
+				
+				label_Teki_1.text      = name;
+				
+				break;
+				
+			case 1:
+				
+				label_Teki_2.text      = name;
+				
+				break;
+				
+			case 2:
+				
+				label_Teki_3.text      = name;
+				
+				break;
+				
+			case 3:
+				
+				label_Teki_4.text      = name;
+				
+				break;
+				
+			default:
+				
+				break;
+				
+		}
+		
+	} else if ( [tag isEqualToString: @"A"] ) {
+		
+		switch ( index ) {
+				
+			case 0:
+				
+				label_Teki_1.text      = name;
+				label_TekiTensu_1.text = tensuu;
+				
+				break;
+				
+			case 1:
+				
+				label_Teki_2.text      = name;
+				label_TekiTensu_2.text = tensuu;
+				
+				break;
+				
+			case 2:
+				
+				label_Teki_3.text      = name;
+				label_TekiTensu_3.text = tensuu;
+				
+				break;
+				
+			case 3:
+				
+				label_Teki_4.text      = name;
+				label_TekiTensu_4.text = tensuu;
+				
+				break;
+				
+			default:
+				
+				break;
+				
+		}
 
+		if ( integer_BallCount < 10 ) {
+			
+			[self initBall];
+
+		}
+		
+	}
+	
+}
+
+- (void)gameEnd
+{
+
+	[self setTextLevel: @"Game End"];
+	
 }
 
 @end

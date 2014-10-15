@@ -14,7 +14,7 @@
 
 #define SERVICE_TYPE @"MCStepper"
 
-@interface ViewController : UIViewController < MCNearbyServiceAdvertiserDelegate, MCNearbyServiceBrowserDelegate, NSStreamDelegate,MCBrowserViewControllerDelegate, MCSessionDelegate, MCAdvertiserAssistantDelegate >
+@interface ViewController : UIViewController < MCNearbyServiceAdvertiserDelegate, MCNearbyServiceBrowserDelegate, NSStreamDelegate,MCSessionDelegate, MCBrowserViewControllerDelegate, MCAdvertiserAssistantDelegate >
 {
 
 @private
