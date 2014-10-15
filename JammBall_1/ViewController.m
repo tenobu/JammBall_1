@@ -50,10 +50,8 @@
 	
 	AppDelegate *app;
 
-//	NSString *string_1;
-	
 	NSTimer *timer, *timer2;
-	
+
 	//敵の管理
 	NSMutableArray *array_Teki;
 	
@@ -135,7 +133,52 @@
 	// Dispose of any resources that can be recreated.
 
 }
-	 
+
+
+// Multipeer Connectivityで接続先を見つけるUIを表示する
+- (IBAction)connect: (UIButton *)sender;
+{
+	
+	//AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+	
+	MCBrowserViewController *_browserViewController = [[MCBrowserViewController alloc] initWithServiceType: self.serviceType session: self.session];
+	
+	_browserViewController.delegate             = self;
+	_browserViewController.minimumNumberOfPeers = 3;
+	_browserViewController.maximumNumberOfPeers = kMCSessionMaximumNumberOfPeers;
+	
+	[self presentViewController: _browserViewController
+					   animated: YES
+					 completion: NULL];
+	
+	
+	//    NSLog(@"kokohatottayo-------------------");
+	
+}
+
+//キャンセルでviewを隠す
+-(void)browserViewControllerWasCancelled: (MCBrowserViewController *)browserViewController
+{
+	
+	[browserViewController dismissViewControllerAnimated:YES completion:NULL];
+	
+}
+
+//完了でviewをかくす
+-(void)browserViewControllerDidFinish:(MCBrowserViewController *)browserViewController;
+{
+	
+	[self aprivate];
+	
+	[browserViewController dismissViewControllerAnimated:YES completion:NULL];
+	
+	//	self.gameScene.hidden = NO;
+	gameScene.hidden = NO;
+	
+	[gameScene readyGame];
+	
+}
+
 - (void)setSendData: (NSString *)string
 {
 	
@@ -260,23 +303,6 @@
 		
 	}
 	
-	//
-	//	//self.label_TekiTensu_1.text = [NSString stringWithFormat: @"敵１    %@", string];
-	//	//string_1 = [NSString stringWithFormat: @"敵１    %@", string];
-	//
-	//	[self aprivate];
-	//
-	//
-	//	[self initBall];
-		 
-	//	NSLog( @"count = %d", [array_Ball count] );
-		 
-	//	timer2 = [NSTimer scheduledTimerWithTimeInterval: 0.1
-	//											  target: self
-	//											selector: @selector( tamaDown )
-	//											userInfo: nil
-	//											 repeats: NO];
-		 
 }
 
 
@@ -338,51 +364,6 @@ didReceiveInvitationFromPeer: (MCPeerID *)peerID
 	[self showAlert: @"didReceiveInvitationFromPeer"
 			message: @"accept invitation!"];
 
-}
-
-
-// Multipeer Connectivityで接続先を見つけるUIを表示する
-- (IBAction)connect: (UIButton *)sender;
-{
-	
-	//AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-	
-	MCBrowserViewController *_browserViewController = [[MCBrowserViewController alloc] initWithServiceType: self.serviceType session: self.session];
-	
-	_browserViewController.delegate             = self;
-	_browserViewController.minimumNumberOfPeers = 3;
-	_browserViewController.maximumNumberOfPeers = kMCSessionMaximumNumberOfPeers;
-	
-	[self presentViewController: _browserViewController
-					   animated: YES
-					 completion: NULL];
-	
-	
-	//    NSLog(@"kokohatottayo-------------------");
-	
-}
-
-//キャンセルでviewを隠す
--(void)browserViewControllerWasCancelled: (MCBrowserViewController *)browserViewController
-{
-
-	[browserViewController dismissViewControllerAnimated:YES completion:NULL];
-
-}
-
-//完了でviewをかくす
--(void)browserViewControllerDidFinish:(MCBrowserViewController *)browserViewController;
-{
-
-	[self aprivate];
-	
-	[browserViewController dismissViewControllerAnimated:YES completion:NULL];
-
-//	self.gameScene.hidden = NO;
-	gameScene.hidden = NO;
-	
-	[gameScene startGame];
-	
 }
 
 // デバイスの表示可否

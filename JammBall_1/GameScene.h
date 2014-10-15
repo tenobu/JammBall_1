@@ -10,6 +10,7 @@
 
 @interface GameScene : SKScene
 
+- (void)readyGame;
 - (void)startGame;
 
 - (void)  setTextLevel: (NSString *)string;

@@ -20,7 +20,15 @@
 	
 	NSString *string_1;
 	
-	NSTimer *timer, *timer2;
+	NSTimer *timer1, *timer2, *timer3;
+	
+	// プレイヤーの一覧
+	NSMutableArray *array_Player;
+	NSMutableArray *array_PlayerCount;
+	NSInteger integer_PlayerCount;
+
+	// 名前の一覧
+	NSMutableDictionary *dic_Name;
 	
 	NSInteger integer_MyTensu;
 	
@@ -30,7 +38,7 @@
 	NSInteger integer_BallCount;
 	
 	//穴の複数管理
-	NSInteger integer_AnaCount, integer_LevelCount, integer_PlayCount;
+	NSInteger integer_AnaCount, integer_LevelCount, integer_PlayCount, integer_GoCount;
 	NSDate *date_Play;
 	
 	NSMutableArray *array_Ana;
@@ -55,6 +63,8 @@
 	SKLabelNode *label_Teki_4;
 	SKLabelNode *label_TekiTensu_4;
 	
+	NSString *mode;
+	
 }
 
 @end
@@ -63,6 +73,8 @@
 
 - (void)didMoveToView: (SKView *)view
 {
+	
+	NSLog( @"didMoveToView" );
 	
 	//		x = (295 : 728);
 	//		y = (  0 : 768);
@@ -209,10 +221,21 @@
 	[self addChild: label_TekiTensu_4];
 	
 	
+	// プレイヤーの一覧
+	array_Player      = [[NSMutableArray alloc] init];
+	array_PlayerCount = [[NSMutableArray alloc] init];
+	integer_PlayCount = 1;
+	
+	// 名前の一覧
+	dic_Name     = [[NSMutableDictionary alloc] init];
+	
+	
 	integer_LevelCount = 1;
 	integer_AnaCount   = 3;
 	integer_PlayCount  = 60;
 	
+
+	mode = @"";
 	
 	[self initGame];
 	
@@ -250,13 +273,25 @@
 - (void)update: (CFTimeInterval)currentTime
 {
 
+	//NSLog( @"update" );
+	
 	/* Called before each frame is rendered */
+
+	if ( [mode isEqualToString: @"Game"] ) {
+		
+		NSLog( @"update" );
+		
+		[self tamaDown];
+		
+	}
 
 }
 
 - (void)initGame
 {
 	
+	NSLog( @"initGame" );
+
 	motionManager = [[CMMotionManager alloc] init];
 	
 	if ( motionManager.accelerometerAvailable ) {
@@ -349,6 +384,8 @@
 - (void)initAna
 {
 	
+	NSLog( @"initAna" );
+	
 	//		x = (295 : 728);
 	//		y = (  0 : 768);
 	
@@ -387,6 +424,8 @@
 - (void)removeAllAna
 {
 	
+	NSLog( @"removeAllAna" );
+	
 	for ( NSDictionary *dic in array_Ana ) {
 		
 		SKSpriteNode *blackhall = [dic objectForKey: @"SKSpriteNode"];
@@ -401,6 +440,8 @@
 
 - (void)initBall
 {
+	
+	NSLog( @"initBall" );
 	
 	NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
 
@@ -438,6 +479,8 @@
 - (void)removeAllBall
 {
 	
+	NSLog( @"removeAllBall" );
+	
 	for ( NSDictionary *dic in array_Ball ) {
 		
 		SKSpriteNode *ball = [dic objectForKey: @"SKSpriteNode"];
@@ -452,11 +495,66 @@
 	
 }
 
+- (void)readyGame
+{
+	
+	NSLog( @"readyGame" );
+	
+	NSInteger p1 = 1, p2 = 0, p3 = 0;
+	
+	if ( [array_PlayerCount count] > 0 ) {
+		
+		NSNumber *number = (NSNumber *)[array_PlayerCount objectAtIndex: 0];
+		p2 = number.integerValue;
+	
+		if ( p2 == 3 )
+			p1 ++;
+		
+	}
+	
+	if ( [array_PlayerCount count] > 1 ) {
+		
+		NSNumber *number = (NSNumber *)[array_PlayerCount objectAtIndex: 1];
+		p3 = number.integerValue;
+		
+		if ( p3 == 3 )
+			p1 ++;
+		
+	}
+	
+	if ( p1 == 3 && p2 == 3 && p3 == 3 ) {
+		
+		[dic_Name removeAllObjects];
+		
+		[self startGame];
+	
+		return;
+		
+	}
+
+	
+	[self setTextLevel: [NSString stringWithFormat: @"READY GAME %d", (int)p1]];
+	
+	NSString *string = [NSString stringWithFormat: @"%06d", (int)[array_Player count] + 1];
+	
+	string = [NSString stringWithFormat: @"R0%@", string];
+	
+	UIView *view = (UIView *)self.view;
+	ViewController *viewCont = (ViewController *)view.window.rootViewController;
+	
+	[viewCont setSendData: string];
+	
+}
+
 - (void)startGame
 {
 	
+	NSLog( @"startGame" );
+	
 	[self removeAllAna];
-
+	
+	[self removeAllBall];
+	
 	[self setTextLevel: [NSString stringWithFormat: @"LEVEL %d", (int)integer_LevelCount]];
 	
 	
@@ -470,15 +568,15 @@
 	[self initBall];
 	
 	
-	date_Play = [NSDate date];
+//	date_Play = [NSDate date];
 	
 	
-	timer = [NSTimer scheduledTimerWithTimeInterval: 0.5
-											 target: self
-										   selector: @selector( timer_Action )
-										   userInfo: nil
-											repeats: YES];
-
+//	timer1 = [NSTimer scheduledTimerWithTimeInterval: 0.5
+//											 target: self
+//										   selector: @selector( timer_1_Action )
+//										   userInfo: nil
+//											repeats: YES];
+	
 	timer2 = [NSTimer scheduledTimerWithTimeInterval: 10.0
 											  target: self
 											selector: @selector( timer_2_Action )
@@ -488,26 +586,34 @@
 	
 	[self timer_2_Action];
 	
+	mode = @"Game";
+	
 }
 
 
 
 
 
-- (void)timer_Action
+- (void)timer_1_Action
 {
 	
-	NSDate *date_now = [NSDate date];
+	NSLog( @"timer_1_Action" );
 	
-	if ( [date_now timeIntervalSinceDate: date_Play] > integer_PlayCount ) {
-		
-		[timer invalidate];
-		
-		[self gameEnd];
-		
-		return;
-		
-	}
+//	NSDate *date_now = [NSDate date];
+//	
+//	NSTimeInterval time = [date_now timeIntervalSinceDate: date_Play];
+// 
+//	NSLog( @"time:integer_PlayCount = %d:%d ", (int)time, (int)integer_PlayCount );
+//	
+//	if ( time > integer_PlayCount ) {
+//		
+//		//[timer invalidate];
+//		
+//		[self endGame];
+//		
+//		return;
+//		
+//	}
 	
 	[self tamaDown];
 	
@@ -515,6 +621,8 @@
 
 - (void)timer_2_Action
 {
+	
+	NSLog( @"timer_2_Action" );
 	
 	NSString *string = [NSString stringWithFormat: @"%06d", (int)integer_MyTensu];
 	
@@ -529,8 +637,17 @@
 	
 }
 
+- (void)timer_3_Action
+{
+	
+	NSLog( @"timer_3_Action" );
+	
+}
+
 - (void)tamaDown
 {
+	
+	NSLog( @"tamaDown" );
 	
 	int index;
 	
@@ -598,12 +715,16 @@ loop:
 - (void)tabaArawaru
 {
 	
+	NSLog( @"tabaArawaru" );
+	
 	[self initBall];
 	
 }
 
 - (void)setTextLevel: (NSString *)string
 {
+	
+	NSLog( @"setTextLevel:%@", string );
 	
 	label_MyLevel.text = string;
 	
@@ -620,12 +741,16 @@ loop:
 - (void)setTextLevelClear
 {
 	
+	NSLog( @"setTextLevelClear" );
+	
 	label_MyLevel.text = @"";
 	
 }
 
 - (void)setTextLabel: (NSString *)string
 {
+	
+	NSLog( @"setTextLabel:%@", string );
 	
 	label_Label.text = string;
 	
@@ -642,6 +767,8 @@ loop:
 - (void)setTextLabelClear
 {
 	
+	NSLog( @"setTextLabelClear" );
+	
 	label_Label.text = @"";
 	
 }
@@ -652,7 +779,81 @@ loop:
 		  tensuu: (NSString *)tensuu
 {
 	
-	if ( [tag isEqualToString: @"F"] ) {
+	NSLog( @"setIndex:%d:%@:%@:%@", (int)index, name, tag, tensuu );
+	
+	if ( [tag isEqualToString: @"R"] ) {
+		
+		switch ( index ) {
+				
+			case 0:
+				
+				label_Teki_1.text      = name;
+				
+				break;
+				
+			case 1:
+				
+				label_Teki_2.text      = name;
+				
+				break;
+				
+			case 2:
+				
+				label_Teki_3.text      = name;
+				
+				break;
+				
+			case 3:
+				
+				label_Teki_4.text      = name;
+				
+				break;
+				
+			default:
+				
+				break;
+				
+		}
+		
+		NSString *string_player;
+		
+		NSInteger index = 0;
+		
+		for ( string_player in array_Player ) {
+			
+			if ( [name isEqualToString: string_player] ) {
+				
+				NSNumber *number = [[NSNumber alloc] initWithInteger: tensuu.integerValue];
+				
+				[array_PlayerCount setObject: number atIndexedSubscript: index];
+				
+				break;
+				
+			}
+			
+			index ++;
+			
+		}
+		
+		if ( [name isEqualToString: string_player] == NO ) {
+			
+			[array_Player addObject: name];
+			
+			NSNumber *number = [[NSNumber alloc] initWithInteger: tensuu.integerValue];
+			
+			[array_PlayerCount addObject: number];
+			
+		}
+		
+		[self readyGame];
+		
+		timer2 = [NSTimer scheduledTimerWithTimeInterval: 10.0
+												  target: self
+												selector: @selector( timer_3_Action )
+												userInfo: nil
+												 repeats: NO];
+		
+	} else 	if ( [tag isEqualToString: @"F"] ) {
 		
 		switch ( index ) {
 				
@@ -734,10 +935,17 @@ loop:
 	
 }
 
-- (void)gameEnd
+- (void)endGame
 {
 
-	[self setTextLevel: @"Game End"];
+	NSLog( @"endGame" );
+	
+	[self setTextLevel: [NSString stringWithFormat: @"End Game LEVEL %d", (int)integer_LevelCount]];
+	
+	integer_LevelCount ++;
+	integer_AnaCount   ++;
+	
+	[self startGame];
 	
 }
 
