@@ -277,13 +277,14 @@
 	
 	/* Called before each frame is rendered */
 
-	if ( [mode isEqualToString: @"Game"] ) {
-		
-//		NSLog( @"update" );
-		
-		[self tamaDown];
-		
-	}
+//	if ( [mode isEqualToString: @"Game"] ) {
+//		
+////		NSLog( @"update" );
+//		
+//
+//		[self tamaDown];
+//		
+//	}
 
 }
 
