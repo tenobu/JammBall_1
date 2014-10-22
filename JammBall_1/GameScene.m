@@ -776,13 +776,15 @@ loop:
 
 - (void)setIndex: (NSInteger)index
 			name: (NSString *)name
-			 tag: (NSString *)tag
+		 command: (NSString *)command
 		  tensuu: (NSString *)tensuu
+		 message: (NSString *)message
+
 {
 	
-	NSLog( @"setIndex:%d:%@:%@:%@", (int)index, name, tag, tensuu );
+	NSLog( @"setIndex:%d:%@:%@:%@:%@", (int)index, name, command, tensuu, message );
 	
-	if ( [tag isEqualToString: @"R"] ) {
+	if ( [command isEqualToString: @"R"] ) {
 		
 		switch ( index ) {
 				
@@ -854,7 +856,7 @@ loop:
 												userInfo: nil
 												 repeats: NO];
 		
-	} else 	if ( [tag isEqualToString: @"F"] ) {
+	} else 	if ( [command isEqualToString: @"F"] ) {
 		
 		switch ( index ) {
 				
@@ -888,7 +890,7 @@ loop:
 				
 		}
 		
-	} else if ( [tag isEqualToString: @"A"] ) {
+	} else if ( [command isEqualToString: @"A"] ) {
 		
 		switch ( index ) {
 				

@@ -9,6 +9,7 @@
 #import "ViewController.h"
 
 #import "AppDelegate.h"
+#import "StartScene.h"
 #import "GameScene.h"
 #import <EventKit/EventKit.h>
 #import <EventKitUI/EventKitUI.h>
@@ -55,7 +56,8 @@
 	//敵の管理
 	NSMutableArray *array_Teki;
 	
-	GameScene *gameScene;
+	StartScene *startScene;
+	GameScene  *gameScene;
 	
 }
 
@@ -117,12 +119,15 @@
 	skView.ignoresSiblingOrder = YES;
 	
 	// Create and configure the scene.
-	gameScene = [GameScene unarchiveFromFile: @"GameScene"];
+//	gameScene = [GameScene unarchiveFromFile: @"GameScene"];
+	startScene = [StartScene unarchiveFromFile: @"StartScene"];
 	
-	gameScene.scaleMode = SKSceneScaleModeAspectFill;
+//	gameScene.scaleMode = SKSceneScaleModeAspectFill;
+	startScene.scaleMode = SKSceneScaleModeAspectFill;
 	
 	// Present the scene.
-	[skView presentScene: gameScene];
+//	[skView presentScene: gameScene];
+	[skView presentScene: startScene];
 
 }
 
@@ -144,7 +149,7 @@
 	MCBrowserViewController *_browserViewController = [[MCBrowserViewController alloc] initWithServiceType: self.serviceType session: self.session];
 	
 	_browserViewController.delegate             = self;
-	_browserViewController.minimumNumberOfPeers = 3;
+	_browserViewController.minimumNumberOfPeers = 2;
 	_browserViewController.maximumNumberOfPeers = kMCSessionMaximumNumberOfPeers;
 	
 	[self presentViewController: _browserViewController
@@ -193,15 +198,17 @@
 	if ( [peerIDs count] == 0 ) {
 			 
 //		self.textView_String.text = @"この端末は、誰にも繋がっていない！！";
+		[startScene setStatusData: @"この端末は、誰にも繋がっていない！！"];
 		[gameScene setTextLabel: @"この端末は、誰にも繋がっていない！！"];
-			 
+
 		return;
 		
 	}
 		 
 	//	self.textView_String.text = [peerIDs componentsJoinedByString: @", "];
-	[gameScene setTextLabel: [peerIDs componentsJoinedByString: @", "]];
-		 
+	[startScene setStatusData: [peerIDs componentsJoinedByString: @", "]];
+	[gameScene   setTextLabel: [peerIDs componentsJoinedByString: @", "]];
+
 		 
 	[self.session sendData: data
 				   toPeers: peerIDs
@@ -237,7 +244,7 @@
 	//	NSLog(@"タイトル %@ 本文　%@", title, note);
 	//	[self saveRiminder:title note:note];
 	
-	//    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&error];
+	//    NSDictionary *json = [NSJSONSerialization JSONObjectWithData: data options: NSJSONReadingMutableLeaves error: &error];
 	//    if (!error) {
 	//        NSLog(@"data = %@", json);
 	//        [self.stepDelegate recvDictionary:json];
@@ -248,10 +255,13 @@
 	
 	NSString *command = [string substringToIndex: 1];
 	string = [string substringFromIndex: 1];
-		 
-	NSString *teki    = [string substringToIndex: 1];
-	string = [string substringFromIndex: 1];
-		 
+	
+	NSString *tensuu = [string substringToIndex: 6];
+	string = [string substringFromIndex: 6];
+	
+	NSString *message = string;
+	
+	
 	NSMutableDictionary *dic;
 	NSString *name;
 	BOOL flag = NO;
@@ -264,15 +274,22 @@
 		
 		if ( [name isEqualToString: display_name] ) {
 			
-			[dic setObject: string forKey: @"敵点数"];
+			[dic setObject: tensuu forKey: @"敵点数"];
 			
 			NSNumber *number = [dic objectForKey: @"index"];
 			NSInteger idx = number.integerValue;
 			
+			[startScene setIndex: idx
+							name: name
+						 command: command
+						  tensuu: tensuu
+						 message: message];
+
 			[gameScene setIndex: idx
 						   name: name
-							tag: command
-						 tensuu: string];
+						command: command
+						 tensuu: tensuu
+						message: message];
 			
 			flag = YES;
 			
@@ -296,10 +313,17 @@
 		
 		[array_Teki addObject: dic];
 		
+		[startScene setIndex: index
+						name: display_name
+					 command: command
+					  tensuu: tensuu
+					 message: message];
+		
 		[gameScene setIndex: index
 					   name: display_name
-						tag: command
-					 tensuu: string];
+					command: command
+					 tensuu: tensuu
+					message: message];
 		
 	}
 	
